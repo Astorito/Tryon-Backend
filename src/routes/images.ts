@@ -77,10 +77,10 @@ router.post('/generate', validateClient, async (req: Request, res: Response): Pr
     usageService.logUse(empresaId);
 
     // Enviar métrica a Metrics Dashboard
-    await sendMetric('image_generated', {
-      prompt: prompt.substring(0, 100), // Solo los primeros 100 caracteres
-      metadata,
-    }, empresa.apiKey || empresaId);
+    const clientKey = empresa.apiKey || empresaId;
+    await sendMetric('generation', clientKey, {
+      model: 'BananaPRO',
+    });
 
     // Obtener estadísticas actualizadas
     const stats = usageService.getStats(empresaId);

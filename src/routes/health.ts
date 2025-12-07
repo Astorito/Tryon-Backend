@@ -23,13 +23,12 @@ router.get('/ready', (req: Request, res: Response) => {
 // Test Metrics integration
 router.post('/test-metrics', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { clientKey = 'demotryon01' } = req.body;
+    const { clientKey = 'testtryon01' } = req.body;
 
     // Send test metric
-    await sendMetric('test_event', {
+    await sendMetric('test', clientKey, {
       message: 'Test metric from TryOn Backend',
-      ok: true,
-    }, clientKey);
+    });
 
     res.status(200).json({
       success: true,
