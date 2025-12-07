@@ -30,9 +30,19 @@ app.use(express.json());
 app.use(validateProviderEnv);
 
 // Serve static files from public directory
-const publicPath = process.env.NODE_ENV === 'production' 
-  ? path.join(__dirname, './public')
-  : path.join(__dirname, '../public');
+let publicPath: string;
+try {
+  // Try in production location first
+  publicPath = path.join(__dirname, './public');
+  // Check if it exists
+  const fs = require('fs');
+  if (!fs.existsSync(publicPath)) {
+    // Fall back to development location
+    publicPath = path.join(__dirname, '../public');
+  }
+} catch {
+  publicPath = path.join(__dirname, '../public');
+}
 app.use(express.static(publicPath));
 
 // Health check (no authentication required)
