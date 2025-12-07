@@ -27,6 +27,16 @@ const app: Express = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// CSP header for widget compatibility
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:;"
+  );
+  next();
+});
+
 app.use(validateProviderEnv);
 
 // Serve static files from public directory
