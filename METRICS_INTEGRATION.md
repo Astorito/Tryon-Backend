@@ -15,7 +15,7 @@ Agrega las siguientes variables:
 
 ```
 METRICS_URL = "https://tryon-kappa.vercel.app/api"
-METRICS_ADMIN_KEY = "<valor que recibirás>"
+METRICS_ADMIN_KEY = "cumbres1112"
 ```
 
 ## Endpoints Disponibles
@@ -124,7 +124,7 @@ x-admin-key: <METRICS_ADMIN_KEY>
 ```bash
 curl -X POST https://tryon-kappa.vercel.app/api/metrics \
   -H "Content-Type: application/json" \
-  -H "x-admin-key: <METRICS_ADMIN_KEY>" \
+  -H "x-admin-key: cumbres1112" \
   -d '{"clientKey": "demotryon01", "event": "test", "data": {"ok": true}}'
 ```
 
