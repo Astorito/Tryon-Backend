@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test TryOn Widget</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 0.95rem;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+    
+    .product {
+      text-align: center;
+    }
+    
+    .product-image {
+      width: 200px;
+      height: 200px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    
+    .product-name {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .product-price {
+      font-size: 1.5rem;
+      color: #667eea;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    .product-description {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    
+    .cta {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .cta:hover {
+      background: #764ba2;
+    }
+    
+    .info {
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    
+    .info-title {
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .info-text {
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+    
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🛍️ Test TryOn Widget</h1>
+      <p class="subtitle">Prueba el widget de Try-On en tiempo real</p>
+    </header>
+    
+    <div class="info">
+      <div class="info-title">✅ Widget Activo</div>
+      <div class="info-text">
+        El widget está cargado con <code>testtryon01</code>. 
+        Haz click en el botón flotante en la esquina inferior derecha para iniciar.
+      </div>
+    </div>
+    
+    <div class="grid">
+      <!-- Producto 1 -->
+      <div class="card">
+        <div class="product">
+          <div class="product-image">👔</div>
+          <div class="product-name">Camiseta Premium</div>
+          <div class="product-price">$39.99</div>
+          <div class="product-description">Camiseta de algodón 100% con excelente calidad y comodidad</div>
+          <button class="cta">Probar Try-On →</button>
+        </div>
+      </div>
+      
+      <!-- Producto 2 -->
+      <div class="card">
+        <div class="product">
+          <div class="product-image">👗</div>
+          <div class="product-name">Vestido Elegante</div>
+          <div class="product-price">$79.99</div>
+          <div class="product-description">Vestido de noche perfecto para cualquier ocasión especial</div>
+          <button class="cta">Probar Try-On →</button>
+        </div>
+      </div>
+      
+      <!-- Producto 3 -->
+      <div class="card">
+        <div class="product">
+          <div class="product-image">👖</div>
+          <div class="product-name">Jeans Clásicos</div>
+          <div class="product-price">$59.99</div>
+          <div class="product-description">Jeans versátiles que combinan con todo tu guardarropa</div>
+          <button class="cta">Probar Try-On →</button>
+        </div>
+      </div>
+      
+      <!-- Producto 4 -->
+      <div class="card">
+        <div class="product">
+          <div class="product-image">🧥</div>
+          <div class="product-name">Chaqueta Casual</div>
+          <div class="product-price">$89.99</div>
+          <div class="product-description">Chaqueta perfecta para cualquier clima y ocasión</div>
+          <button class="cta">Probar Try-On →</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="info">
+      <div class="info-title">📊 Integración Activa</div>
+      <div class="info-text">
+        Cada vez que generes un Try-On, se enviará automáticamente un evento al Metrics Dashboard.
+        Puedes revisar los eventos en: <code>https://tryon-kappa.vercel.app/clients</code>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Widget Try-On -->
+  <script src="https://tryon-widget.vercel.app/widget.js" data-tryon-key="testtryon01"></script>
+</body>
+</html>
