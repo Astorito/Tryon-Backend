@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo para clientes de generación de imágenes (Multi-tenant)
+model Empresa {
+  id        String   @id @default(uuid())
+  nombre    String
+  apiKey    String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  imagenesGeneradas ImagenGenerada[]
+
+  @@index([apiKey])
+  @@index([active])
+}
+
+// Modelo para imágenes generadas
+model ImagenGenerada {
+  id          String   @id @default(uuid())
+  empresaId   String
+  empresa     Empresa  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  prompt      String
+  modelo      String   // "banana" | "veo3" | "mosaico"
+  urlResultado String?
+  createdAt   DateTime @default(now())
+
+  @@index([empresaId])
+  @@index([createdAt])
+  @@index([modelo])
+}
+
+// Modelo legacy para compatibilidad hacia atrás
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  apiKey    String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  generations Generation[]
+
+  @@index([apiKey])
+}
+
+// Modelo legacy para compatibilidad hacia atrás
+model Generation {
+  id             String   @id @default(cuid())
+  clientId       String
+  client         Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  prompt         String
+  imageUrl       String
+  estimatedCost  Float    @default(0.01)
+  service        String   @default("banana") // "banana" or "veo3"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([createdAt])
+}

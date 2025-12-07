@@ -1,0 +1,17 @@
+{
+  "name": "tryon-widget",
+  "version": "1.0.0",
+  "description": "Embeddable Tryon widget for virtual try-on generation",
+  "main": "dist/widget.js",
+  "module": "dist/widget.js",
+  "files": ["dist"],
+  "scripts": {
+    "dev": "esbuild src/index.js --bundle --outfile=dist/widget.js --watch --sourcemap",
+    "build": "esbuild src/index.js --bundle --outfile=dist/widget.js --minify --sourcemap=inline",
+    "serve": "python3 -m http.server 8000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "esbuild": "^0.19.0"
+  }
+}

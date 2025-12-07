@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tryon Widget - Advanced Example</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    header p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    section {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #1f2937;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-top: 30px;
+      margin-bottom: 16px;
+      color: #374151;
+    }
+
+    p {
+      line-height: 1.8;
+      color: #6b7280;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin: 30px 0;
+    }
+
+    .product-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 48px;
+    }
+
+    .product-content {
+      padding: 20px;
+    }
+
+    .product-content h4 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+
+    .product-content p {
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .product-price {
+      font-size: 20px;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #764ba2;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-item {
+      padding: 20px;
+      background: #f3f4f6;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .feature-item .icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .feature-item h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+
+    .feature-item p {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+      padding: 60px 40px;
+      border-radius: 16px;
+      margin: 60px 0 0;
+    }
+
+    .cta-section h2 {
+      color: white;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .cta-section p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 14px 40px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.3s;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      background: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 80px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>👗 Fashion Store with Virtual Try-On</h1>
+    <p>Experience the future of online shopping</p>
+  </header>
+
+  <div class="container">
+    <section>
+      <h2>Welcome to Our Store</h2>
+      <p>
+        We've integrated Tryon, the cutting-edge virtual try-on technology, to transform your shopping experience. Now you
+        can see how clothes look on you before you buy them!
+      </p>
+
+      <h3>🎯 How It Works</h3>
+      <ol style="margin-left: 20px; color: #6b7280;">
+        <li style="margin-bottom: 10px;">Click the floating button in the bottom-right corner</li>
+        <li style="margin-bottom: 10px;">Upload your photo (first time only - we'll guide you through onboarding)</li>
+        <li style="margin-bottom: 10px;">Select clothing items from our catalog</li>
+        <li style="margin-bottom: 10px;">Click "Generate Try-On" to see AI-generated results</li>
+        <li>Download or share your virtual try-on!</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Featured Products</h2>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-image">👔</div>
+          <div class="product-content">
+            <h4>Classic Blazer</h4>
+            <p>Timeless style that works for any occasion</p>
+            <div class="product-price">$89.99</div>
+            <button class="btn">Try On Now</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">👗</div>
+          <div class="product-content">
+            <h4>Summer Dress</h4>
+            <p>Perfect for warm weather and casual outings</p>
+            <div class="product-price">$59.99</div>
+            <button class="btn">Try On Now</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">👖</div>
+          <div class="product-content">
+            <h4>Comfort Jeans</h4>
+            <p>All-day comfort with a modern fit</p>
+            <div class="product-price">$79.99</div>
+            <button class="btn">Try On Now</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">👜</div>
+          <div class="product-content">
+            <h4>Designer Bag</h4>
+            <p>Elevate your style with this versatile accessory</p>
+            <div class="product-price">$149.99</div>
+            <button class="btn">Try On Now</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">👕</div>
+          <div class="product-content">
+            <h4>Casual T-Shirt</h4>
+            <p>Comfortable and versatile basics</p>
+            <div class="product-price">$24.99</div>
+            <button class="btn">Try On Now</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image">🧥</div>
+          <div class="product-content">
+            <h4>Trendy Jacket</h4>
+            <p>Make a statement with this fashion-forward piece</p>
+            <div class="product-price">$119.99</div>
+            <button class="btn">Try On Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Why Choose Tryon?</h2>
+      <div class="features">
+        <div class="feature-item">
+          <div class="icon">⚡</div>
+          <h4>Lightning Fast</h4>
+          <p>Get your try-on results in seconds</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="icon">🎨</div>
+          <h4>High Quality</h4>
+          <p>AI-powered realistic try-on images</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="icon">📱</div>
+          <h4>Mobile Friendly</h4>
+          <p>Works seamlessly on all devices</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="icon">🔒</div>
+          <h4>Secure</h4>
+          <p>Your data is encrypted and private</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="icon">💾</div>
+          <h4>Save & Share</h4>
+          <p>Keep your try-ons and share with friends</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="icon">🌍</div>
+          <h4>Global Access</h4>
+          <p>Available in your favorite stores worldwide</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-section">
+      <h2>Ready to Experience Virtual Try-On?</h2>
+      <p>Start your journey to confident shopping today</p>
+      <button class="cta-button" onclick="document.querySelector('#tryon-floating-button')?.click()">
+        Open Tryon Widget
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Fashion Store. Powered by Tryon. All rights reserved.</p>
+  </footer>
+
+  <!-- Add the Tryon Widget -->
+  <script src="../dist/widget.js"></script>
+</body>
+</html>

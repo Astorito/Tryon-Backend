@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tryon Widget - Basic Example</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      color: #1f2937;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    p {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .feature {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .feature h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .feature p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .note {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 30px 0;
+    }
+
+    .note p {
+      margin: 0;
+      color: #92400e;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Welcome to Tryon Widget</h1>
+
+    <p>
+      This page demonstrates how easy it is to integrate the Tryon virtual try-on widget into your website.
+      Look for the floating button in the bottom right corner!
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>📸 Upload Photo</h3>
+        <p>Add your personal photo with drag & drop</p>
+      </div>
+
+      <div class="feature">
+        <h3>👗 Select Clothes</h3>
+        <p>Choose up to 4 clothing items to try on</p>
+      </div>
+
+      <div class="feature">
+        <h3>✨ Generate</h3>
+        <p>AI generates your virtual try-on in seconds</p>
+      </div>
+
+      <div class="feature">
+        <h3>📥 Download</h3>
+        <p>Save your results and share with friends</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 40px; margin-bottom: 20px; color: #1f2937;">Features</h2>
+    <ul style="margin-left: 20px; color: #6b7280;">
+      <li style="margin-bottom: 10px;">✅ One-line integration (just add a script tag)</li>
+      <li style="margin-bottom: 10px;">✅ No framework required (vanilla JavaScript)</li>
+      <li style="margin-bottom: 10px;">✅ Beautiful glass-morphism design</li>
+      <li style="margin-bottom: 10px;">✅ Step-by-step onboarding (shows once)</li>
+      <li style="margin-bottom: 10px;">✅ Fully responsive and mobile-friendly</li>
+      <li style="margin-bottom: 10px;">✅ LocalStorage persistence</li>
+      <li style="margin-bottom: 10px;">✅ Hover magnifier for results</li>
+      <li style="margin-bottom: 10px;">✅ Accessible (WCAG compliant)</li>
+    </ul>
+
+    <div class="note">
+      <p>
+        <strong>💡 Tip:</strong> Click the floating button to open the widget. On your first visit, you'll see an
+        onboarding tour. After that, the widget will remember you've completed it and show the main interface directly.
+      </p>
+    </div>
+
+    <h2 style="margin-top: 40px; margin-bottom: 20px; color: #1f2937;">Integration Code</h2>
+    <p>To add this widget to your website, simply include this line in your HTML:</p>
+
+    <div style="background: #1f2937; color: #10b981; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 20px 0;">
+      <code style="color: #10b981; background: none; padding: 0;">
+        &lt;script src="https://cdn.tryon.app/widget.js"&gt;&lt;/script&gt;
+      </code>
+    </div>
+
+    <p>The widget will automatically:</p>
+    <ul style="margin-left: 20px; color: #6b7280;">
+      <li>Create a floating button in the bottom-right corner</li>
+      <li>Inject all necessary styles</li>
+      <li>Handle file uploads and image processing</li>
+      <li>Manage user interface and interactions</li>
+    </ul>
+
+    <h2 style="margin-top: 40px; margin-bottom: 20px; color: #1f2937;">Configuration (Optional)</h2>
+    <p>You can configure the widget with custom API settings:</p>
+
+    <div
+      style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin: 20px 0; overflow-x: auto;"
+    >
+      <pre style="color: #1f2937; margin: 0; font-size: 13px;"><code>&lt;script&gt;
+  window.TRYON_CONFIG = {
+    apiUrl: 'https://your-backend.vercel.app',
+    apiKey: 'your-api-key'
+  };
+&lt;/script&gt;
+&lt;script src="https://cdn.tryon.app/widget.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+
+    <h2 style="margin-top: 40px; margin-bottom: 20px; color: #1f2937;">Browser Support</h2>
+    <p>The widget works on all modern browsers:</p>
+    <ul style="margin-left: 20px; color: #6b7280;">
+      <li>Chrome 90+</li>
+      <li>Firefox 88+</li>
+      <li>Safari 14+</li>
+      <li>Edge 90+</li>
+      <li>Mobile browsers (iOS Safari 14+, Chrome Mobile)</li>
+    </ul>
+
+    <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-top: 40px;">
+      <p style="margin: 0; color: #1e40af;">
+        <strong>🎯 Ready to try?</strong> Click the floating button in the bottom-right corner to start your virtual try-on
+        experience!
+      </p>
+    </div>
+  </div>
+
+  <!-- Add the Tryon Widget -->
+  <script src="../dist/widget.js"></script>
+</body>
+</html>

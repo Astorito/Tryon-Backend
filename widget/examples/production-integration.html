@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tryon Widget - Production Integration</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 900px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 60px 40px;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #333;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .snippet {
+      background: #f5f5f5;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.9em;
+      overflow-x: auto;
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .snippet code {
+      color: #333;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #764ba2;
+    }
+
+    .copy-btn.copied {
+      background: #28a745;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .feature {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .feature h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+
+    .feature p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .steps {
+      background: #f0f7ff;
+      padding: 30px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .steps ol {
+      margin-left: 20px;
+      color: #333;
+      line-height: 2;
+    }
+
+    .steps li {
+      margin-bottom: 15px;
+    }
+
+    .steps strong {
+      color: #667eea;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      color: #856404;
+    }
+
+    .success {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      color: #155724;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: #f5f5f5;
+    }
+
+    .cta {
+      background: #667eea;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 20px 0;
+      display: inline-block;
+      transition: background 0.3s;
+    }
+
+    .cta:hover {
+      background: #764ba2;
+    }
+
+    .footer {
+      background: #f5f5f5;
+      padding: 30px 40px;
+      text-align: center;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Monaco', monospace;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #28a745;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      margin-left: 10px;
+    }
+
+    .badge.required {
+      background: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 40px 20px;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .content {
+        padding: 30px 20px;
+      }
+
+      .snippet {
+        font-size: 0.85em;
+        padding: 15px;
+      }
+
+      .copy-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🎯 Tryon Widget</h1>
+      <p>Production Integration Guide</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Quick Start Section -->
+      <div class="section">
+        <h2>⚡ Quick Start</h2>
+        <p>Copy and paste this single line to add Tryon to your website:</p>
+
+        <div class="snippet" id="quickSnippet">
+<script src="https://cdn.tryon.app/widget.js" data-tryon-key="YOUR_API_KEY_HERE"></script></div>
+        <button class="copy-btn" onclick="copyToClipboard('quickSnippet', this)">📋 Copy Snippet</button>
+
+        <div class="success">
+          ✅ <strong>That's it!</strong> The floating button appears automatically in the bottom-right corner.
+        </div>
+      </div>
+
+      <!-- Configuration Section -->
+      <div class="section">
+        <h2>⚙️ Configuration Options</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Required</th>
+                <th>Default</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>data-tryon-key</code></td>
+                <td><span class="badge required">YES</span></td>
+                <td>-</td>
+                <td>Your API key from Tryon Metrics dashboard</td>
+              </tr>
+              <tr>
+                <td><code>data-tryon-url</code></td>
+                <td><span class="badge">Optional</span></td>
+                <td>https://tryon-backend.vercel.app</td>
+                <td>Custom backend URL (if self-hosted)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Example with custom backend:</strong></p>
+        <div class="snippet">
+&lt;script src="https://cdn.tryon.app/widget.js"
+  data-tryon-key="sk_live_abc123xyz789"
+  data-tryon-url="https://your-backend.vercel.app"&gt;
+&lt;/script&gt;</div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="section">
+        <h2>🌟 Features Included</h2>
+
+        <div class="features">
+          <div class="feature">
+            <h3>🎯 Guided Onboarding</h3>
+            <p>4-step interactive tutorial that only shows once, then remembered in localStorage.</p>
+          </div>
+
+          <div class="feature">
+            <h3>📸 Drag & Drop Upload</h3>
+            <p>Easy photo upload with visual feedback. Support for JPEG, PNG, and WebP formats.</p>
+          </div>
+
+          <div class="feature">
+            <h3>🔍 Hover Magnifier</h3>
+            <p>2x zoom lens on generated images. Perfect for detail inspection.</p>
+          </div>
+
+          <div class="feature">
+            <h3>💾 Smart Storage</h3>
+            <p>All data saved locally using localStorage. No data sent to our servers (only for generation).</p>
+          </div>
+
+          <div class="feature">
+            <h3>✨ Glass Morphism UI</h3>
+            <p>Modern, beautiful design with semi-transparent backgrounds and blur effects.</p>
+          </div>
+
+          <div class="feature">
+            <h3>📱 Fully Responsive</h3>
+            <p>Perfect on desktop, tablet, and mobile. Works everywhere your customers are.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform-Specific Integration -->
+      <div class="section">
+        <h2>🛒 Platform-Specific Integration</h2>
+
+        <!-- Shopify -->
+        <h3 style="color: #667eea; margin: 25px 0 15px 0;">Shopify</h3>
+        <div class="steps">
+          <ol>
+            <li>Go to <strong>Online Store</strong> → <strong>Themes</strong></li>
+            <li>Click <strong>Edit code</strong></li>
+            <li>Find <code>theme.liquid</code> file</li>
+            <li>Add before closing <code>&lt;/body&gt;</code> tag:</li>
+          </ol>
+        </div>
+        <div class="snippet">
+&lt;script src="https://cdn.tryon.app/widget.js" 
+  data-tryon-key="sk_live_xxx"&gt;
+&lt;/script&gt;</div>
+
+        <!-- WooCommerce -->
+        <h3 style="color: #667eea; margin: 25px 0 15px 0;">WooCommerce / WordPress</h3>
+        <div class="steps">
+          <ol>
+            <li>Go to <strong>Appearance</strong> → <strong>Theme File Editor</strong></li>
+            <li>Edit <code>footer.php</code></li>
+            <li>Add before closing <code>&lt;/body&gt;</code>:</li>
+          </ol>
+        </div>
+        <div class="snippet">
+&lt;?php if (get_option('tryon_api_key')) { ?&gt;
+  &lt;script src="https://cdn.tryon.app/widget.js"
+    data-tryon-key="&lt;?php echo get_option('tryon_api_key'); ?&gt;"&gt;
+  &lt;/script&gt;
+&lt;?php } ?&gt;</div>
+
+        <!-- React/Next.js -->
+        <h3 style="color: #667eea; margin: 25px 0 15px 0;">React / Next.js</h3>
+        <div class="snippet">
+import { useEffect } from 'react';
+
+export default function App() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute('data-tryon-key', 
+      process.env.REACT_APP_TRYON_API_KEY);
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  return &lt;div&gt;Your App&lt;/div&gt;;
+}</div>
+
+        <!-- Vue -->
+        <h3 style="color: #667eea; margin: 25px 0 15px 0;">Vue.js</h3>
+        <div class="snippet">
+export default {
+  mounted() {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute('data-tryon-key', 
+      process.env.VUE_APP_TRYON_API_KEY);
+    script.async = true;
+    document.body.appendChild(script);
+  }
+}</div>
+      </div>
+
+      <!-- Getting API Key -->
+      <div class="section">
+        <h2>🔑 How to Get Your API Key</h2>
+
+        <div class="steps">
+          <ol>
+            <li>Visit <strong><a href="https://tryon-kappa.vercel.app" target="_blank" style="color: #667eea;">Tryon Metrics Dashboard</a></strong></li>
+            <li>Login with your company credentials</li>
+            <li>Go to <strong>Settings</strong> → <strong>Integration</strong></li>
+            <li>Copy your <strong>Live API Key</strong> (starts with <code>sk_live_</code>)</li>
+            <li>Replace <code>YOUR_API_KEY_HERE</code> with your actual key</li>
+          </ol>
+        </div>
+
+        <div class="warning">
+          ⚠️ <strong>Never commit API keys to Git!</strong> Use environment variables instead.
+        </div>
+      </div>
+
+      <!-- Environment Variables -->
+      <div class="section">
+        <h2>🔒 Environment Variables Setup</h2>
+
+        <h3 style="color: #667eea; margin: 20px 0 15px 0;">.env.local (Development)</h3>
+        <div class="snippet">
+REACT_APP_TRYON_API_KEY=sk_test_abc123xyz789
+REACT_APP_TRYON_API_URL=http://localhost:3001</div>
+
+        <h3 style="color: #667eea; margin: 20px 0 15px 0;">.env.production (Production)</h3>
+        <div class="snippet">
+REACT_APP_TRYON_API_KEY=sk_live_abc123xyz789
+REACT_APP_TRYON_API_URL=https://tryon-backend.vercel.app</div>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div class="section">
+        <h2>🔧 Troubleshooting</h2>
+
+        <div class="steps">
+          <strong>Widget doesn't appear?</strong>
+          <ol>
+            <li>Open DevTools (F12) and check Console</li>
+            <li>Look for errors starting with <code>[Tryon Widget]</code></li>
+            <li>Verify <code>data-tryon-key</code> attribute is present</li>
+            <li>Check Network tab - widget.js should load successfully</li>
+          </ol>
+        </div>
+
+        <div class="steps" style="margin-top: 20px;">
+          <strong>Images won't generate?</strong>
+          <ol>
+            <li>Verify API key is valid (not expired or revoked)</li>
+            <li>Check backend URL is reachable (if custom)</li>
+            <li>Ensure file sizes are under 10MB</li>
+            <li>Check browser console for error messages</li>
+          </ol>
+        </div>
+
+        <div class="steps" style="margin-top: 20px;">
+          <strong>Reset widget state?</strong>
+          <p>Run this in browser console to clear stored data:</p>
+          <div class="snippet">
+Object.keys(localStorage)
+  .filter(k => k.startsWith('tryon-widget-'))
+  .forEach(k => localStorage.removeItem(k));</div>
+        </div>
+      </div>
+
+      <!-- Performance -->
+      <div class="section">
+        <h2>⚡ Performance Notes</h2>
+
+        <div class="success">
+          ✅ Widget is <strong>105KB gzipped</strong> - lightweight and fast to load
+        </div>
+
+        <div class="steps">
+          <strong>Optional: Lazy Load the Widget</strong>
+          <p>Only load widget when user clicks a button:</p>
+          <div class="snippet">
+&lt;button onclick="loadTryonWidget()"&gt;Try On Now&lt;/button&gt;
+
+&lt;script&gt;
+function loadTryonWidget() {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.tryon.app/widget.js';
+  script.setAttribute('data-tryon-key', 'YOUR_API_KEY');
+  document.body.appendChild(script);
+}
+&lt;/script&gt;</div>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="section">
+        <h2>🔐 Security Best Practices</h2>
+
+        <div class="steps">
+          <ol>
+            <li><strong>Use HTTPS Only</strong> - Widget requires secure context in production</li>
+            <li><strong>Protect API Keys</strong> - Never hardcode in HTML, use environment variables</li>
+            <li><strong>Rotate Keys Regularly</strong> - Change compromised keys immediately</li>
+            <li><strong>Enable CORS</strong> - Backend handles CORS automatically</li>
+            <li><strong>CSP Headers</strong> - Allow widget domain: <code>script-src 'self' https://cdn.tryon.app</code></li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Support -->
+      <div class="section">
+        <h2>📞 Support & Resources</h2>
+
+        <p>
+          📧 <strong>Email:</strong> <a href="mailto:support@tryon.app">support@tryon.app</a><br>
+          📖 <strong>Documentation:</strong> <a href="https://docs.tryon.app" target="_blank">https://docs.tryon.app</a><br>
+          🐛 <strong>Report Issues:</strong> <a href="https://github.com/tryon/widget" target="_blank">GitHub</a><br>
+          🔄 <strong>Status Page:</strong> <a href="https://status.tryon.app" target="_blank">https://status.tryon.app</a>
+        </p>
+
+        <div class="success" style="margin-top: 20px;">
+          <strong>🎉 You're ready to go!</strong><br>
+          Copy the quick-start snippet above and paste it into your website. The widget will appear automatically!
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Tryon Widget v1.0.0 | © 2024 Tryon - Virtual Try-On Technology</p>
+      <p style="margin-top: 10px; font-size: 0.9em;">Built with ❤️ for e-commerce</p>
+    </div>
+  </div>
+
+  <!-- Tryon Widget Script (Optional - shows the widget on this page) -->
+  <script src="https://cdn.tryon.app/widget.js" data-tryon-key="demo_key_001"></script>
+
+  <!-- Copy to Clipboard Script -->
+  <script>
+    function copyToClipboard(elementId, buttonElement) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent.trim();
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = buttonElement.textContent;
+        buttonElement.textContent = '✅ Copied!';
+        buttonElement.classList.add('copied');
+        
+        setTimeout(() => {
+          buttonElement.textContent = originalText;
+          buttonElement.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        alert('Failed to copy. Please copy manually.');
+      });
+    }
+  </script>
+</body>
+</html>

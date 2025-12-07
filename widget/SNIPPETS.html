@@ -1,0 +1,454 @@
+<!-- ============================================
+     TRYON WIDGET - COPY & PASTE SNIPPETS
+     ============================================
+     
+     Ready-to-use HTML snippets for embedding the Tryon widget
+     on any website. Choose the one that matches your platform.
+     
+     Requirements:
+     - data-tryon-key: Your API key (GET from https://tryon-kappa.vercel.app)
+     - data-tryon-url: Optional, defaults to https://tryon-backend.vercel.app
+-->
+
+<!-- ============================================
+     🎯 BASIC INTEGRATION
+     
+     The absolute minimum to get started.
+     Just add this one line to your website.
+-->
+
+<script src="https://cdn.tryon.app/widget.js" data-tryon-key="YOUR_API_KEY_HERE"></script>
+
+
+<!-- ============================================
+     🎯 WITH CUSTOM BACKEND URL
+     
+     Use this if you have a custom backend deployment.
+-->
+
+<script 
+  src="https://cdn.tryon.app/widget.js" 
+  data-tryon-key="YOUR_API_KEY_HERE"
+  data-tryon-url="https://your-backend.vercel.app">
+</script>
+
+
+<!-- ============================================
+     🛒 SHOPIFY INTEGRATION
+     
+     1. Go to Online Store → Themes
+     2. Click Edit code
+     3. Find theme.liquid
+     4. Add this code before closing </body> tag
+-->
+
+<!-- Tryon Widget - Shopify -->
+<script 
+  src="https://cdn.tryon.app/widget.js" 
+  data-tryon-key="sk_live_xyz123"
+  data-tryon-url="https://tryon-backend.vercel.app">
+</script>
+
+<!-- Optional: Add in product template to customize button position
+     (Add to product.liquid or product-template.liquid) -->
+<style>
+  .tryon-btn-floating {
+    bottom: 100px; /* Adjust if conflicts with Shopify elements */
+  }
+</style>
+
+
+<!-- ============================================
+     📦 WOOCOMMERCE / WORDPRESS
+     
+     Option 1: Using Header Footer Code Manager plugin
+     - Install plugin from WordPress marketplace
+     - Go to HFCM → Headers
+     - Add this code
+-->
+
+<script 
+  src="https://cdn.tryon.app/widget.js" 
+  data-tryon-key="sk_live_xyz123">
+</script>
+
+<!-- Option 2: Programmatically in functions.php
+add_action('wp_footer', function() {
+  $tryon_key = get_option('tryon_api_key');
+  if ($tryon_key) {
+    ?>
+    <script src="https://cdn.tryon.app/widget.js" 
+      data-tryon-key="<?php echo esc_attr($tryon_key); ?>">
+    </script>
+    <?php
+  }
+});
+-->
+
+
+<!-- ============================================
+     ⚛️ REACT / NEXT.JS COMPONENT
+     
+     Create file: components/TryonWidget.jsx
+-->
+
+import { useEffect } from 'react';
+
+export default function TryonWidget() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute(
+      'data-tryon-key', 
+      process.env.REACT_APP_TRYON_API_KEY
+    );
+    script.setAttribute(
+      'data-tryon-url', 
+      process.env.REACT_APP_TRYON_API_URL || 
+      'https://tryon-backend.vercel.app'
+    );
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup if needed
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
+
+  return null; // Widget renders itself
+}
+
+// Usage in your page:
+// <TryonWidget />
+
+// Don't forget .env.local:
+// REACT_APP_TRYON_API_KEY=sk_test_xxx
+// REACT_APP_TRYON_API_URL=http://localhost:3001
+
+
+<!-- ============================================
+     🍃 VUE.JS COMPONENT
+     
+     Create file: components/TryonWidget.vue
+-->
+
+<template>
+  <div id="tryon-widget-placeholder"></div>
+</template>
+
+<script>
+export default {
+  name: 'TryonWidget',
+  mounted() {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute(
+      'data-tryon-key',
+      process.env.VUE_APP_TRYON_API_KEY
+    );
+    script.setAttribute(
+      'data-tryon-url',
+      process.env.VUE_APP_TRYON_API_URL || 
+      'https://tryon-backend.vercel.app'
+    );
+    script.async = true;
+    document.body.appendChild(script);
+  }
+};
+</script>
+
+<!-- .env.local:
+     VUE_APP_TRYON_API_KEY=sk_test_xxx
+     VUE_APP_TRYON_API_URL=http://localhost:3001
+-->
+
+
+<!-- ============================================
+     🅰️ ANGULAR INTEGRATION
+     
+     Add to: src/index.html
+     Before closing </body> tag
+-->
+
+<script 
+  src="https://cdn.tryon.app/widget.js" 
+  data-tryon-key="sk_live_xyz123"
+  data-tryon-url="https://tryon-backend.vercel.app">
+</script>
+
+
+<!-- ============================================
+     🚀 SVELTE COMPONENT
+     
+     Create file: components/TryonWidget.svelte
+-->
+
+<script>
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute(
+      'data-tryon-key',
+      import.meta.env.VITE_TRYON_API_KEY
+    );
+    script.setAttribute(
+      'data-tryon-url',
+      import.meta.env.VITE_TRYON_API_URL || 
+      'https://tryon-backend.vercel.app'
+    );
+    script.async = true;
+    document.body.appendChild(script);
+  });
+</script>
+
+
+<!-- ============================================
+     🎬 LAZY LOAD WIDGET (Performance Optimization)
+     
+     Only load widget when user clicks a button.
+     Great for reducing initial page load time.
+-->
+
+<button onclick="loadTryonWidget()" class="try-on-btn">
+  🎯 Try On Now
+</button>
+
+<script>
+  function loadTryonWidget() {
+    // Prevent multiple loads
+    if (window.TRYON_WIDGET_CONFIG) {
+      return;
+    }
+
+    // Create and load script
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute('data-tryon-key', 'YOUR_API_KEY_HERE');
+    script.setAttribute('data-tryon-url', 'https://tryon-backend.vercel.app');
+    script.async = true;
+    
+    script.onerror = () => {
+      alert('Failed to load Try-On widget. Please try again.');
+    };
+
+    document.body.appendChild(script);
+  }
+</script>
+
+
+<!-- ============================================
+     🔒 LAZY LOAD WITH ERROR HANDLING
+     
+     Production-ready lazy loading with full error handling.
+-->
+
+<button onclick="loadTryonWidget()" class="try-on-btn" id="tryOnBtn">
+  🎯 Try On Now
+</button>
+
+<script>
+  let tryOnLoading = false;
+
+  function loadTryonWidget() {
+    // Prevent multiple simultaneous loads
+    if (tryOnLoading) return;
+    if (window.TRYON_WIDGET_LOADED) return;
+
+    tryOnLoading = true;
+    const btn = document.getElementById('tryOnBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Loading...';
+    btn.disabled = true;
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.tryon.app/widget.js';
+    script.setAttribute('data-tryon-key', 'YOUR_API_KEY_HERE');
+    script.async = true;
+
+    script.onload = () => {
+      window.TRYON_WIDGET_LOADED = true;
+      console.log('[Tryon Widget] Loaded successfully');
+      btn.textContent = '🎯 Try On';
+      btn.disabled = false;
+    };
+
+    script.onerror = () => {
+      console.error('[Tryon Widget] Failed to load');
+      btn.textContent = originalText;
+      btn.disabled = false;
+      tryOnLoading = false;
+      alert('Failed to load Try-On widget. Please check your internet connection and try again.');
+    };
+
+    document.body.appendChild(script);
+  }
+</script>
+
+
+<!-- ============================================
+     🔧 ENVIRONMENT CONFIGURATION EXAMPLES
+     
+     Example .env files for different frameworks
+-->
+
+<!-- .env.local (Development) -->
+REACT_APP_TRYON_API_KEY=sk_test_abc123xyz789
+REACT_APP_TRYON_API_URL=http://localhost:3001
+
+<!-- .env.production (Production) -->
+REACT_APP_TRYON_API_KEY=sk_live_abc123xyz789
+REACT_APP_TRYON_API_URL=https://tryon-backend.vercel.app
+
+
+<!-- ============================================
+     💾 LOCALSTORAGE MANAGEMENT
+     
+     View and clear widget data from browser console
+-->
+
+<!-- Check if widget has loaded configuration -->
+console.log('Widget Config:', window.TRYON_WIDGET_CONFIG);
+
+<!-- View all widget data stored locally -->
+Object.entries(localStorage)
+  .filter(([key]) => key.startsWith('tryon-widget-'))
+  .forEach(([key, value]) => {
+    console.log(key, ':', value);
+  });
+
+<!-- Clear all widget data (reset state) -->
+Object.keys(localStorage)
+  .filter(key => key.startsWith('tryon-widget-'))
+  .forEach(key => localStorage.removeItem(key));
+
+console.log('Widget data cleared');
+
+
+<!-- ============================================
+     🎨 CUSTOM STYLING (CSS OVERRIDE)
+     
+     Override widget styles to match your brand
+-->
+
+<style>
+  /* Override primary color */
+  .tryon-widget-root {
+    --tryon-primary: #FF6B6B;        /* Your brand color */
+    --tryon-primary-dark: #E63946;   /* Darker shade */
+    --tryon-accent: #FFB400;         /* Accent color */
+  }
+
+  /* Adjust button position */
+  .tryon-btn-floating {
+    bottom: 32px !important;
+    right: 32px !important;
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  /* Custom modal width */
+  .tryon-modal {
+    --modal-max-width: 600px;
+  }
+
+  /* Adjust z-index if conflicts with other elements */
+  .tryon-btn-floating,
+  .tryon-modal-backdrop,
+  .tryon-modal {
+    z-index: 9999 !important;
+  }
+</style>
+
+
+<!-- ============================================
+     ⚠️ ERROR HANDLING & DEBUGGING
+     
+     Log widget events and errors
+-->
+
+<script>
+  // Enable widget debugging
+  window.TRYON_DEBUG = true;
+
+  // Listen for widget errors
+  window.addEventListener('error', (event) => {
+    if (event.message && event.message.includes('Tryon')) {
+      console.error('[Tryon Error]', event);
+      // Send to your error tracking service
+    }
+  });
+
+  // Check widget status
+  const checkWidgetStatus = setInterval(() => {
+    if (window.TRYON_WIDGET_CONFIG) {
+      console.log('[Tryon] Widget initialized with config:', 
+        window.TRYON_WIDGET_CONFIG);
+      clearInterval(checkWidgetStatus);
+    }
+  }, 100);
+
+  // Clear after 5 seconds
+  setTimeout(() => clearInterval(checkWidgetStatus), 5000);
+</script>
+
+
+<!-- ============================================
+     📊 ANALYTICS INTEGRATION (Optional)
+     
+     Track widget usage with Google Analytics
+-->
+
+<script>
+  // Assuming Google Analytics gtag is loaded
+  function trackTryOnEvent(eventName, eventData = {}) {
+    if (window.gtag) {
+      gtag('event', eventName, {
+        'event_category': 'tryon_widget',
+        ...eventData
+      });
+    }
+  }
+
+  // Track widget open
+  const originalOpen = Element.prototype.click;
+  Element.prototype.click = function() {
+    if (this.classList?.contains('tryon-btn-floating')) {
+      trackTryOnEvent('widget_opened');
+    }
+    return originalOpen.call(this);
+  };
+</script>
+
+
+<!-- ============================================
+     ✅ FINAL CHECKLIST BEFORE DEPLOYING
+     
+     - [ ] Replace YOUR_API_KEY_HERE with actual key
+     - [ ] Use sk_live_* keys in production
+     - [ ] Test on desktop and mobile
+     - [ ] Verify onboarding shows once
+     - [ ] Test image uploads with various formats
+     - [ ] Check console for errors
+     - [ ] Monitor backend performance
+     - [ ] Set up error tracking
+     - [ ] Document for your team
+     - [ ] Create support documentation
+-->
+
+
+<!-- ============================================
+     📞 SUPPORT & RESOURCES
+     
+     Need help? Here are your resources:
+     
+     📧 Email: support@tryon.app
+     📖 Docs: https://docs.tryon.app
+     🐛 Issues: https://github.com/tryon/widget
+     🔄 Status: https://status.tryon.app
+     💻 Dashboard: https://tryon-kappa.vercel.app
+-->
