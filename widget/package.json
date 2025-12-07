@@ -7,7 +7,7 @@
   "files": ["dist"],
   "scripts": {
     "dev": "esbuild src/index.js --bundle --outfile=dist/widget.js --watch --sourcemap",
-    "build": "esbuild src/index.js --bundle --outfile=dist/widget.js --minify --sourcemap=inline",
+    "build": "esbuild src/index.js --bundle --outfile=dist/widget.js --minify --target=es2015 --format=iife",
     "serve": "python3 -m http.server 8000"
   },
   "dependencies": {},
