@@ -4,6 +4,7 @@ import imageProviders from '../services/imageProviders';
 import { getCompanyByApiKey, getCompanyById } from '../services/companies';
 import validateClient from '../middleware/validateClient';
 import * as usageService from '../services/usageService';
+import { sendMetric } from '../services/metricsClient';
 
 const router = Router();
 
@@ -74,6 +75,12 @@ router.post('/generate', validateClient, async (req: Request, res: Response): Pr
 
     // Registrar uso en usageService
     usageService.logUse(empresaId);
+
+    // Enviar métrica a Metrics Dashboard
+    await sendMetric('image_generated', {
+      prompt: prompt.substring(0, 100), // Solo los primeros 100 caracteres
+      metadata,
+    }, empresa.apiKey || empresaId);
 
     // Obtener estadísticas actualizadas
     const stats = usageService.getStats(empresaId);
