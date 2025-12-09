@@ -51,6 +51,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(validateProviderEnv);
 
+// Explicit CORS handling for preflight requests
+app.options('*', cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'x-client-key', 'x-admin-key', 'Authorization'],
+}));
+
 // Serve static files from public directory
 let publicPath: string;
 try {
