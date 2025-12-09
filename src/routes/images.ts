@@ -9,6 +9,14 @@ import { sendMetric } from '../services/metricsClient';
 const router = Router();
 
 /**
+ * OPTIONS /images/generate-widget
+ * Handle preflight CORS requests
+ */
+router.options('/generate-widget', (req: Request, res: Response): void => {
+  res.status(200).end();
+});
+
+/**
  * POST /images/generate-widget
  * Endpoint especial para widget que acepta API key en body (sin preflight CORS)
  */
