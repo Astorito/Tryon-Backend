@@ -9,7 +9,104 @@ import { sendMetric } from '../services/metricsClient';
 const router = Router();
 
 /**
- * POST /images/generate
+ * POST /images/generate-widget
+ * Endpoint especial para widget que acepta API key en body (sin preflight CORS)
+ */
+router.post('/generate-widget', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userPhotoBase64, clothingBase64, apiKey } = req.body;
+
+    if (!apiKey) {
+      res.status(400).json({
+        success: false,
+        error: 'Missing apiKey in request body',
+      });
+      return;
+    }
+
+    // Obtener empresa por API key
+    const empresa = await getCompanyByApiKey(apiKey);
+
+    if (!empresa) {
+      res.status(401).json({
+        success: false,
+        error: 'Invalid API key',
+      });
+      return;
+    }
+
+    const empresaId = empresa.id;
+
+    if (!userPhotoBase64 || !clothingBase64) {
+      res.status(400).json({
+        success: false,
+        error: 'Missing required fields: userPhotoBase64 and clothingBase64',
+      });
+      return;
+    }
+
+    // Validar dailyLimit si está configurado
+    if (empresa.dailyLimit && empresa.dailyLimit > 0) {
+      const stats = usageService.getStats(empresaId);
+      if (stats.totalToday >= empresa.dailyLimit) {
+        res.status(429).json({
+          success: false,
+          error: `Daily limit (${empresa.dailyLimit}) exceeded. Total today: ${stats.totalToday}`,
+          stats,
+        });
+        return;
+      }
+    }
+
+    const prompt = 'A person wearing stylish clothing in a professional try-on photo, high quality, well-lit, model showcase';
+
+    // Llamar a Banana PRO para generar imagen
+    const generationResult = await imageProviders.generate(prompt, {
+      userPhotoBase64,
+      clothingBase64,
+    });
+
+    // Registrar uso en usageService
+    usageService.logUse(empresaId);
+
+    // Enviar métrica a Metrics Dashboard
+    const clientKey = empresa.apiKey || empresaId;
+    await sendMetric('generation', clientKey, {
+      model: 'BananaPRO',
+    });
+
+    // Obtener estadísticas actualizadas
+    const stats = usageService.getStats(empresaId);
+
+    if (!generationResult.success) {
+      res.status(500).json({
+        success: false,
+        error: generationResult.error,
+      });
+      return;
+    }
+
+    const generationId = randomUUID();
+
+    res.status(200).json({
+      success: true,
+      url: generationResult.url,
+      generationId,
+      stats: {
+        totalToday: stats.totalToday,
+        dailyLimit: empresa.dailyLimit,
+      },
+    });
+  } catch (error) {
+    console.error('Image generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error during image generation',
+    });
+  }
+});
+
+/**
  * Genera una imagen usando Banana PRO
  *
  * Headers:
@@ -190,6 +287,112 @@ router.get('/stats/:empresaId', async (req: Request, res: Response): Promise<voi
     res.status(500).json({
       success: false,
       error: 'Internal server error',
+      timestamp: new Date().toISOString(),
+    });
+  }
+});
+
+/**
+ * POST /images/generate-widget
+ * Endpoint alternativo para el widget (evita preflight CORS)
+ * Acepta API key en el body en lugar del header
+ */
+router.post('/generate-widget', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { apiKey, userPhotoBase64, clothingBase64, prompt } = req.body;
+
+    if (!apiKey) {
+      res.status(401).json({
+        success: false,
+        error: 'Missing apiKey in request body',
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    // Obtener empresa por API key
+    const empresa = await getCompanyByApiKey(apiKey);
+    if (!empresa) {
+      res.status(401).json({
+        success: false,
+        error: 'Invalid API key',
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    const empresaId = empresa.id;
+
+    // Validación de input
+    if (!userPhotoBase64 || !clothingBase64) {
+      res.status(400).json({
+        success: false,
+        error: 'Missing required fields: userPhotoBase64 and clothingBase64',
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    // Validar dailyLimit si está configurado
+    if (empresa.dailyLimit && empresa.dailyLimit > 0) {
+      const stats = usageService.getStats(empresaId);
+      if (stats.totalToday >= empresa.dailyLimit) {
+        res.status(429).json({
+          success: false,
+          error: `Daily limit (${empresa.dailyLimit}) exceeded. Total today: ${stats.totalToday}`,
+          stats,
+          timestamp: new Date().toISOString(),
+        });
+        return;
+      }
+    }
+
+    // Generar prompt
+    const inputPrompt = prompt || 'A person wearing stylish clothing in a professional try-on photo, high quality, well-lit, model showcase';
+
+    // Llamar a Banana PRO para generar imagen
+    const generationResult = await imageProviders.generate(inputPrompt, {
+      userPhotoBase64,
+      clothingBase64,
+    });
+
+    // Registrar uso en usageService
+    usageService.logUse(empresaId);
+
+    // Enviar métrica a Metrics Dashboard
+    await sendMetric('generation', apiKey, {
+      model: 'BananaPRO',
+    });
+
+    // Obtener estadísticas actualizadas
+    const stats = usageService.getStats(empresaId);
+
+    if (!generationResult.success) {
+      res.status(500).json({
+        success: false,
+        error: generationResult.error,
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    const generationId = randomUUID();
+
+    res.status(200).json({
+      success: true,
+      url: generationResult.url,
+      generationId,
+      stats: {
+        totalToday: stats.totalToday,
+        dailyLimit: empresa.dailyLimit,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Widget image generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error during image generation',
       timestamp: new Date().toISOString(),
     });
   }

@@ -314,17 +314,16 @@
         const userPhotoBase64 = await fileToBase64(userPhotoFile);
         const clothingBase64 = await fileToBase64(clothingFile);
         
-        // Send to backend as JSON
-        const response = await fetch('https://tryon-backend-delta.vercel.app/api/images/generate', {
+        // Send to backend as JSON (no custom headers = no preflight)
+        const response = await fetch('https://tryon-backend-delta.vercel.app/api/images/generate-widget', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-client-key': apiKey,
           },
           body: JSON.stringify({
             userPhotoBase64,
             clothingBase64,
-            prompt: 'professional fashion try-on photo',
+            apiKey, // Send API key in body instead of header
           }),
         });
         
