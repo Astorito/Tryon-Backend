@@ -84,16 +84,17 @@
       position: fixed;
       right: 0;
       top: 0;
-      width: 380px;
+      width: 350px;
       height: 100vh;
       background: white;
-      box-shadow: -2px 0 15px rgba(0, 0, 0, 0.15);
+      box-shadow: -2px 0 15px rgba(0, 0, 0, 0.1);
       z-index: 999998;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
+      transform: translateX(380px);
+      transition: transform 0.35s ease;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
+      border-radius: 8px 0 0 8px;
     `;
     
     // Panel header
@@ -219,33 +220,8 @@
     
     function togglePanel() {
       const isOpen = panel.style.transform === 'translateX(0px)';
-      panel.style.transform = isOpen ? 'translateX(400px)' : 'translateX(0px)';
-      button.style.opacity = isOpen ? '1' : '0.5';
+      panel.style.transform = isOpen ? 'translateX(380px)' : 'translateX(0px)';
     }
-    
-    // Overlay para cerrar al hacer click afuera
-    const overlay = document.createElement('div');
-    overlay.id = 'tryon-overlay';
-    overlay.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 999997;
-      display: none;
-    `;
-    overlay.addEventListener('click', togglePanel);
-    document.body.appendChild(overlay);
-    
-    // Mostrar/ocultar overlay
-    const originalToggle = togglePanel;
-    window.togglePanel = function() {
-      originalToggle();
-      overlay.style.display = panel.style.transform === 'translateX(0px)' ? 'block' : 'none';
-    };
-    button.addEventListener('click', window.togglePanel);
-    closeBtn.addEventListener('click', window.togglePanel);
     
     console.log('[TryOn Widget] Initialized successfully');
   }
