@@ -287,8 +287,7 @@
     
     if (generateBtn) {
       generateBtn.addEventListener('click', () => {
-        alert('🚀 Generando Try-On...\n\nAPI Key: ' + apiKey);
-        // TODO: Aquí va la lógica para enviar a la API
+        generateTryOn();
       });
       generateBtn.addEventListener('mouseenter', () => {
         if (!generateBtn.disabled) {
@@ -298,6 +297,68 @@
       generateBtn.addEventListener('mouseleave', () => {
         generateBtn.style.transform = 'translateY(0)';
       });
+    }
+    
+    async function generateTryOn() {
+      if (!userPhotoFile || !clothingFile) {
+        alert('Por favor carga ambas imágenes');
+        return;
+      }
+      
+      // Show loading state
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Generando...';
+      
+      try {
+        // Create FormData
+        const formData = new FormData();
+        formData.append('userPhoto', userPhotoFile);
+        formData.append('clothingItem', clothingFile);
+        
+        // Send to backend
+        const response = await fetch('https://tryon-backend-delta.vercel.app/api/images/generate', {
+          method: 'POST',
+          headers: {
+            'x-client-key': apiKey,
+          },
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Error en la generación: ' + response.statusText);
+        }
+        
+        const data = await response.json();
+        
+        if (data.imageUrl) {
+          // Show result
+          content.innerHTML = `
+            <div style="padding: 20px 0;">
+              <p style="margin: 0 0 15px 0; color: #333; font-size: 14px; font-weight: 600;">
+                ✨ Tu Try-On está listo:
+              </p>
+              <img src="${data.imageUrl}" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+              <button onclick="location.reload()" style="
+                width: 100%;
+                padding: 10px;
+                background: linear-gradient(135deg, #c9b896 0%, #a89968 100%);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+              ">
+                Generar otra
+              </button>
+            </div>
+          `;
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generar Try-On';
+      }
     }
     
     function togglePanel() {
