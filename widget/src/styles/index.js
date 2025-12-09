@@ -23,16 +23,17 @@ function getStyles() {
    ============================================================================ */
 
 .tryon-widget-root {
-  --tryon-primary: #5CAEFF;
-  --tryon-primary-dark: #4A90E2;
+  --tryon-primary: #C4A57B;
+  --tryon-primary-dark: #B39564;
   --tryon-secondary: #6B7280;
-  --tryon-background: rgba(255, 255, 255, 0.95);
-  --tryon-background-dark: rgba(30, 30, 30, 0.5);
-  --tryon-border: rgba(0, 0, 0, 0.1);
+  --tryon-background: #F5F5F5;
+  --tryon-card-bg: #FFFFFF;
+  --tryon-border: #E5E7EB;
   --tryon-text: #1F2937;
   --tryon-text-light: #6B7280;
-  --tryon-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  --tryon-radius: 16px;
+  --tryon-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --tryon-radius: 20px;
+  --tryon-radius-sm: 12px;
   --tryon-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -130,9 +131,9 @@ function getStyles() {
   position: relative;
   margin: auto;
   width: 90%;
-  max-width: 500px;
+  max-width: 420px;
   height: auto;
-  max-height: 85vh;
+  max-height: 90vh;
   background: var(--tryon-background);
   border-radius: var(--tryon-radius);
   box-shadow: var(--tryon-shadow);
@@ -140,6 +141,7 @@ function getStyles() {
   flex-direction: column;
   overflow: hidden;
   animation: tryon-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  padding: 24px;
 }
 
 .tryon-modal-close {
@@ -168,7 +170,7 @@ function getStyles() {
 .tryon-modal-content {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 24px;
+  padding: 0;
 }
 
 /* ============================================================================
@@ -627,6 +629,147 @@ function getStyles() {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ============================================================================
+   New Design - Specific Styles
+   ============================================================================ */
+
+.tryon-logo-badge {
+  background: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tryon-text);
+  display: inline-block;
+  margin: 0 auto 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.tryon-main-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tryon-user-photo-section {
+  margin-bottom: 16px;
+}
+
+.tryon-dropzone.large {
+  margin-bottom: 0;
+}
+
+.tryon-dropzone.large .tryon-dropzone-area {
+  background: white;
+  border: none;
+  border-radius: var(--tryon-radius);
+  padding: 60px 24px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--tryon-shadow);
+}
+
+.tryon-dropzone-icon-large {
+  color: var(--tryon-text-light);
+  margin-bottom: 12px;
+}
+
+.tryon-dropzone-placeholder-large {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tryon-text);
+}
+
+.tryon-products-label {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tryon-text);
+  margin: 16px 0 12px;
+}
+
+.tryon-clothes-grid-main {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tryon-clothes-slot-main {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--tryon-radius-sm);
+  background: white;
+  box-shadow: var(--tryon-shadow);
+}
+
+.tryon-dropzone.compact .tryon-dropzone-area {
+  background: white;
+  border: none;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tryon-dropzone-icon-compact {
+  color: var(--tryon-text-light);
+}
+
+.tryon-btn-create {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: var(--tryon-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--tryon-transition);
+  background: var(--tryon-primary);
+  color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(196, 165, 123, 0.3);
+}
+
+.tryon-btn-create:hover:not(:disabled) {
+  background: var(--tryon-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196, 165, 123, 0.4);
+}
+
+.tryon-btn-create:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tryon-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--tryon-border);
+  margin-top: auto;
+}
+
+.tryon-footer-text {
+  font-size: 12px;
+  color: var(--tryon-text-light);
+}
+
+.tryon-footer-logo {
+  background: var(--tryon-text);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
 }
   `;
 }

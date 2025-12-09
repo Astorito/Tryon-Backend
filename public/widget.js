@@ -1,4 +1,4 @@
-"use strict";(()=>{var b=(t,e,n)=>new Promise((r,o)=>{var i=a=>{try{s(n.next(a))}catch(d){o(d)}},l=a=>{try{s(n.throw(a))}catch(d){o(d)}},s=a=>a.done?r(a.value):Promise.resolve(a.value).then(i,l);s((n=n.apply(t,e)).next())});function k(t){let e=document.createElement("button");return e.id="tryon-floating-button",e.className="tryon-btn-floating",e.setAttribute("aria-label","Open Tryon Widget"),e.title="Try on clothes with your photo",e.innerHTML=`
+"use strict";(()=>{var f=(t,e,n)=>new Promise((r,o)=>{var s=i=>{try{a(n.next(i))}catch(l){o(l)}},d=i=>{try{a(n.throw(i))}catch(l){o(l)}},a=i=>i.done?r(i.value):Promise.resolve(i.value).then(s,d);a((n=n.apply(t,e)).next())});function E(t){let e=document.createElement("button");return e.id="tryon-floating-button",e.className="tryon-btn-floating",e.setAttribute("aria-label","Open Tryon Widget"),e.title="Try on clothes with your photo",e.innerHTML=`
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="1"></circle>
       <path d="M12 1v6m0 6v6"></path>
@@ -6,27 +6,44 @@
       <path d="M19.78 4.22l-4.24 4.24m0 5.08l-4.24 4.24"></path>
     </svg>
     <span class="tryon-tooltip">Try on now</span>
-  `,e.addEventListener("click",()=>{t()}),e}function E(t,e,n){let r=document.createElement("div");r.className="tryon-step-container";let o=document.createElement("div");o.className="tryon-spotlight";let i=document.createElement("div");i.className="tryon-step-content";let l=document.createElement("div");l.className="tryon-step-indicator";let s=t[e];l.innerHTML=`
-    <div class="tryon-step-title">${s.title}</div>
-    <div class="tryon-step-subtitle">${s.subtitle}</div>
+  `,e.addEventListener("click",()=>{t()}),e}function k(t,e,n){let r=document.createElement("div");r.className="tryon-step-container";let o=document.createElement("div");o.className="tryon-spotlight";let s=document.createElement("div");s.className="tryon-step-content";let d=document.createElement("div");d.className="tryon-step-indicator";let a=t[e];d.innerHTML=`
+    <div class="tryon-step-title">${a.title}</div>
+    <div class="tryon-step-subtitle">${a.subtitle}</div>
     <div class="tryon-step-progress">
-      ${t.map((d,c)=>`
+      ${t.map((l,c)=>`
         <div class="tryon-step-dot ${c===e?"active":""} ${c<e?"completed":""}"></div>
       `).join("")}
     </div>
-  `,i.appendChild(l),i.appendChild(s.component);let a=document.createElement("div");if(a.className="tryon-step-navigation",e>0){let d=document.createElement("button");d.className="tryon-btn-secondary",d.textContent="Back",d.addEventListener("click",()=>n(e-1)),a.appendChild(d)}if(e<t.length-1){let d=document.createElement("button");d.className="tryon-btn-primary",d.textContent="Next",d.addEventListener("click",()=>n(e+1)),a.appendChild(d)}return r.appendChild(o),r.appendChild(i),r.appendChild(a),r}function f(t,e,n,r=["image/*"],o=!1){let i=document.createElement("div");i.className=`tryon-dropzone ${o?"compact":""}`;let l=document.createElement("input");l.type="file",l.accept=r.join(","),l.style.display="none";let s=document.createElement("div");s.className="tryon-dropzone-area",s.innerHTML=`
-    <div class="tryon-dropzone-icon">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="17 8 12 3 7 8"></polyline>
-        <line x1="12" y1="3" x2="12" y2="15"></line>
-      </svg>
-    </div>
-    <div class="tryon-dropzone-text">
-      <div class="tryon-dropzone-title">${t}</div>
-      <div class="tryon-dropzone-placeholder">${e}</div>
-    </div>
-  `;function a(d){if(!d)return;if(!r.includes(d.type)&&!r.includes("image/*")){alert("Invalid file type");return}let c=new FileReader;c.onload=m=>{let p=m.target.result;n(p)},c.readAsDataURL(d)}return s.addEventListener("click",()=>l.click()),l.addEventListener("change",d=>{var c;a((c=d.target.files)==null?void 0:c[0])}),s.addEventListener("dragover",d=>{d.preventDefault(),s.classList.add("dragover")}),s.addEventListener("dragleave",()=>{s.classList.remove("dragover")}),s.addEventListener("drop",d=>{var c,m;d.preventDefault(),s.classList.remove("dragover"),a((m=(c=d.dataTransfer)==null?void 0:c.files)==null?void 0:m[0])}),i.appendChild(l),i.appendChild(s),i}var y="tryon-widget";function S(){return localStorage.getItem(`${y}-onboarding-seen`)==="true"}function N(t){localStorage.setItem(`${y}-onboarding-seen`,t?"true":"false")}function v(t){localStorage.setItem(`${y}-user-photo`,t)}function z(){return localStorage.getItem(`${y}-user-photo`)}function w(t,e){let n=JSON.parse(localStorage.getItem(`${y}-clothes`)||"[]");n[t]=e,localStorage.setItem(`${y}-clothes`,JSON.stringify(n))}function C(){return JSON.parse(localStorage.getItem(`${y}-clothes`)||"[]")}function L(t){localStorage.setItem(`${y}-generated-image`,t)}function T(){return localStorage.getItem(`${y}-generated-image`)}function I(){let t=document.createElement("div");t.className="tryon-step-user-photo";let e=f("Upload your photo","Drag your photo here or click to select",r=>{v(r);let o=t.querySelector(".tryon-photo-preview");o&&(o.innerHTML=`<img src="${r}" alt="Your photo" />`,o.classList.add("has-image"))},["image/jpeg","image/png","image/webp"]);t.appendChild(e);let n=z();if(n){let r=document.createElement("div");r.className="tryon-photo-preview has-image",r.innerHTML=`<img src="${n}" alt="Your photo" />`,t.appendChild(r)}return t}function M(){let t=document.createElement("div");t.className="tryon-step-clothes";let e=document.createElement("div");e.className="tryon-clothes-grid";let n=4,r=C();for(let o=0;o<n;o++){let i=document.createElement("div");i.className="tryon-clothes-slot",i.dataset.index=o;let l=f(`Clothing ${o+1}`,"Drag image",s=>{w(o,s);let a=i.querySelector(".tryon-clothes-preview");a&&(a.innerHTML=`<img src="${s}" alt="Clothing item ${o+1}" />`,a.classList.add("has-image"))},["image/jpeg","image/png","image/webp"],!0);if(i.appendChild(l),r[o]){let s=document.createElement("div");s.className="tryon-clothes-preview has-image",s.innerHTML=`<img src="${r[o]}" alt="Clothing item ${o+1}" />`,i.appendChild(s)}e.appendChild(i)}return t.appendChild(e),t}function $(){let t=document.createElement("div");return t.className="tryon-step-generate",t.innerHTML=`
+  `,s.appendChild(d),s.appendChild(a.component);let i=document.createElement("div");if(i.className="tryon-step-navigation",e>0){let l=document.createElement("button");l.className="tryon-btn-secondary",l.textContent="Back",l.addEventListener("click",()=>n(e-1)),i.appendChild(l)}if(e<t.length-1){let l=document.createElement("button");l.className="tryon-btn-primary",l.textContent="Next",l.addEventListener("click",()=>n(e+1)),i.appendChild(l)}return r.appendChild(o),r.appendChild(s),r.appendChild(i),r}function x(t,e,n,r=["image/*"],o=!1,s=!1){let d=document.createElement("div");d.className=`tryon-dropzone ${o?"compact":""} ${s?"large":""}`;let a=document.createElement("input");a.type="file",a.accept=r.join(","),a.style.display="none";let i=document.createElement("div");i.className="tryon-dropzone-area",s?i.innerHTML=`
+      <div class="tryon-dropzone-icon-large">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </div>
+      <div class="tryon-dropzone-text">
+        <div class="tryon-dropzone-placeholder-large">${e}</div>
+      </div>
+    `:o?i.innerHTML=`
+      <div class="tryon-dropzone-icon-compact">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </div>
+    `:i.innerHTML=`
+      <div class="tryon-dropzone-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+      </div>
+      <div class="tryon-dropzone-text">
+        <div class="tryon-dropzone-title">${t}</div>
+        <div class="tryon-dropzone-placeholder">${e}</div>
+      </div>
+    `;function l(c){if(!c)return;if(!r.includes(c.type)&&!r.includes("image/*")){alert("Invalid file type");return}let m=new FileReader;m.onload=p=>{let y=p.target.result;n(y)},m.readAsDataURL(c)}return i.addEventListener("click",()=>a.click()),a.addEventListener("change",c=>{var m;l((m=c.target.files)==null?void 0:m[0])}),i.addEventListener("dragover",c=>{c.preventDefault(),i.classList.add("dragover")}),i.addEventListener("dragleave",()=>{i.classList.remove("dragover")}),i.addEventListener("drop",c=>{var m,p;c.preventDefault(),i.classList.remove("dragover"),l((p=(m=c.dataTransfer)==null?void 0:m.files)==null?void 0:p[0])}),d.appendChild(a),d.appendChild(i),d}var g="tryon-widget";function z(){return localStorage.getItem(`${g}-onboarding-seen`)==="true"}function S(t){localStorage.setItem(`${g}-onboarding-seen`,t?"true":"false")}function v(t){localStorage.setItem(`${g}-user-photo`,t)}function N(){return localStorage.getItem(`${g}-user-photo`)}function w(t,e){let n=JSON.parse(localStorage.getItem(`${g}-clothes`)||"[]");n[t]=e,localStorage.setItem(`${g}-clothes`,JSON.stringify(n))}function C(){return JSON.parse(localStorage.getItem(`${g}-clothes`)||"[]")}function T(t){localStorage.setItem(`${g}-generated-image`,t)}function L(){return localStorage.getItem(`${g}-generated-image`)}function I(){let t=document.createElement("div");t.className="tryon-step-user-photo";let e=x("Upload your photo","Drag your photo here or click to select",r=>{v(r);let o=t.querySelector(".tryon-photo-preview");o&&(o.innerHTML=`<img src="${r}" alt="Your photo" />`,o.classList.add("has-image"))},["image/jpeg","image/png","image/webp"]);t.appendChild(e);let n=N();if(n){let r=document.createElement("div");r.className="tryon-photo-preview has-image",r.innerHTML=`<img src="${n}" alt="Your photo" />`,t.appendChild(r)}return t}function M(){let t=document.createElement("div");t.className="tryon-step-clothes";let e=document.createElement("div");e.className="tryon-clothes-grid";let n=4,r=C();for(let o=0;o<n;o++){let s=document.createElement("div");s.className="tryon-clothes-slot",s.dataset.index=o;let d=x(`Clothing ${o+1}`,"Drag image",a=>{w(o,a);let i=s.querySelector(".tryon-clothes-preview");i&&(i.innerHTML=`<img src="${a}" alt="Clothing item ${o+1}" />`,i.classList.add("has-image"))},["image/jpeg","image/png","image/webp"],!0);if(s.appendChild(d),r[o]){let a=document.createElement("div");a.className="tryon-clothes-preview has-image",a.innerHTML=`<img src="${r[o]}" alt="Clothing item ${o+1}" />`,s.appendChild(a)}e.appendChild(s)}return t.appendChild(e),t}function $(){let t=document.createElement("div");return t.className="tryon-step-generate",t.innerHTML=`
     <div class="tryon-generate-info">
       <div class="tryon-icon-large">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -44,7 +61,7 @@
         <div class="tryon-feature">\u2713 Multiple clothing styles</div>
       </div>
     </div>
-  `,t}function O(){let t=document.createElement("div");t.className="tryon-step-result";let e=T();if(e){t.innerHTML=`
+  `,t}function O(){let t=document.createElement("div");t.className="tryon-step-result";let e=L();if(e){t.innerHTML=`
       <div class="tryon-result-image-container">
         <img src="${e}" alt="Generated try-on" class="tryon-result-image" />
         <div class="tryon-result-overlay">Your Try-On Result!</div>
@@ -57,25 +74,30 @@
       <div class="tryon-result-placeholder">
         <p>No result yet. Generate an image first!</p>
       </div>
-    `;return t}function G(t){let e=document.createElement("div");e.className="tryon-onboarding";let n=[{title:"Upload Your Photo",subtitle:"Show us what you look like",component:I(),index:0},{title:"Add Your Clothes",subtitle:"Drag up to 4 clothing items",component:M(),index:1},{title:"Generate Try-On",subtitle:"Create your virtual try-on",component:$(),index:2},{title:"See Your Result",subtitle:"Check out how you look",component:O(),index:3}],r=0,o=E(n,r,l=>{r=l,i()});e.appendChild(o);function i(){let l=n[r];o.style.opacity="0",setTimeout(()=>{o.innerHTML="";let s=E(n,r,a=>{r=a,i()});if(o.appendChild(s.firstChild),o.style.opacity="1",r===n.length-1){let a=document.createElement("button");a.className="tryon-btn-primary tryon-btn-onboarding-complete",a.textContent="Start Using Tryon!",a.addEventListener("click",t),o.appendChild(a)}},300)}return i(),e}function H(t){let e=document.createElement("div");e.className="tryon-image-result-container";let n=document.createElement("div");n.className="tryon-image-wrapper";let r=document.createElement("img");r.src=t,r.alt="Generated try-on result",r.className="tryon-result-image";let o=document.createElement("div");o.className="tryon-magnifier-lens";let i=document.createElement("div");i.className="tryon-magnifier-view",i.innerHTML=`<img src="${t}" alt="Magnified view" />`,n.appendChild(r),n.appendChild(o),e.appendChild(n),e.appendChild(i);let l=!1;n.addEventListener("mouseenter",()=>{l=!0,o.style.display="block",i.style.display="block"}),n.addEventListener("mouseleave",()=>{l=!1,o.style.display="none",i.style.display="none"}),n.addEventListener("mousemove",a=>{if(!l)return;let d=n.getBoundingClientRect(),c=a.clientX-d.left,m=a.clientY-d.top;o.style.left=c-50+"px",o.style.top=m-50+"px";let p=2;i.style.backgroundPosition=`-${c*p-150}px -${m*p-150}px`});let s=document.createElement("button");return s.className="tryon-btn-primary tryon-btn-download-result",s.textContent="Download Result",s.addEventListener("click",()=>{let a=document.createElement("a");a.href=t,a.download="tryon-result.png",a.click()}),e.appendChild(s),e}function W(){let t=window.TRYON_WIDGET_CONFIG;if(!t)throw new Error("Tryon Widget config not initialized");return t}function j(t,e){return b(this,null,function*(){let n=W(),r=e.filter(o=>o&&o.length>0);if(!t)throw new Error("User image is required");if(r.length===0)throw new Error("At least one clothing item is required");try{let o=yield fetch(`${n.apiUrl}/images/generate`,{method:"POST",headers:{"Content-Type":"application/json","x-client-key":n.apiKey},body:JSON.stringify({prompt:`A person wearing ${r.length>1?"multiple clothing items":"a clothing item"} from the provided images`,userImage:t,clothes:r})});if(!o.ok){let l=yield o.json().catch(()=>({}));throw new Error(l.error||`API error: ${o.status}`)}let i=yield o.json();if(!i.success)throw new Error(i.error||"Generation failed");return{url:i.url,generationId:i.generationId}}catch(o){throw console.error("Try-on generation error:",o),o}})}function P(){let t=document.createElement("div");t.className="tryon-main-ui";let e=document.createElement("div");e.className="tryon-main-header",e.innerHTML=`
-    <h2>Create Your Try-On</h2>
-    <p>Upload your photo and select clothing items</p>
-  `;let n=document.createElement("div");n.className="tryon-section",n.innerHTML="<h3>Your Photo</h3>";let r=f("Your Photo","Drag or click to upload",p=>{v(p)},["image/jpeg","image/png","image/webp"]);n.appendChild(r);let o=document.createElement("div");o.className="tryon-section",o.innerHTML="<h3>Clothing Items (Select up to 4)</h3>";let i=document.createElement("div");i.className="tryon-clothes-grid-main";let l=C();for(let p=0;p<4;p++){let h=document.createElement("div");h.className="tryon-clothes-slot-main";let g=f(`Item ${p+1}`,"Add clothing",u=>{w(p,u)},["image/jpeg","image/png","image/webp"],!0);if(h.appendChild(g),l[p]){let u=document.createElement("div");u.className="tryon-clothes-preview-main has-image",u.innerHTML=`<img src="${l[p]}" alt="Clothing ${p+1}" />`,h.appendChild(u)}i.appendChild(h)}o.appendChild(i);let s=document.createElement("div");s.className="tryon-section tryon-section-generate";let a=document.createElement("button");a.className="tryon-btn-primary tryon-btn-generate",a.textContent="Generate Try-On",a.id="tryon-generate-btn",a.addEventListener("click",()=>b(this,null,function*(){yield m()})),s.appendChild(a);let d=document.createElement("div");d.className="tryon-section tryon-section-result",d.id="tryon-result-section",t.appendChild(e),t.appendChild(n),t.appendChild(o),t.appendChild(s),t.appendChild(d);function c(){}function m(){return b(this,null,function*(){let p=localStorage.getItem("tryon-user-photo"),h=JSON.parse(localStorage.getItem("tryon-clothes")||"[]");if(!p){alert("Please upload your photo first");return}if(h.filter(g=>g).length===0){alert("Please add at least one clothing item");return}try{a.disabled=!0,a.textContent="Generating...",a.innerHTML='<span class="tryon-spinner"></span> Generating...';let g=yield j(p,h);L(g.url);let u=d;u.innerHTML="",u.appendChild(H(g.url))}catch(g){alert("Error generating image: "+g.message)}finally{a.disabled=!1,a.textContent="Generate Try-On"}})}return t}function A(t){let e=document.createElement("div");e.id="tryon-modal",e.className="tryon-modal";let n=document.createElement("div");n.className="tryon-modal-backdrop";let r=document.createElement("div");r.className="tryon-modal-wrapper";let o=document.createElement("button");o.className="tryon-modal-close",o.innerHTML="&times;",o.setAttribute("aria-label","Close modal");let i=document.createElement("div");i.className="tryon-modal-content",r.appendChild(o),r.appendChild(i),e.appendChild(n),e.appendChild(r);let l=!1,s="main";function a(){if(i.innerHTML="",s==="onboarding"){let m=G(()=>{N(!0),s="main",a()});i.appendChild(m)}else{let m=P();i.appendChild(m)}}function d(){l=!0,e.classList.add("tryon-modal-open"),S()?s="main":s="onboarding",a()}function c(){l=!1,e.classList.remove("tryon-modal-open"),i.innerHTML="",t==null||t()}return o.addEventListener("click",c),n.addEventListener("click",c),e.open=d,e.close=c,e}function U(){if(document.querySelector("#tryon-widget-styles"))return;let t=document.createElement("style");t.id="tryon-widget-styles",t.textContent=B(),document.head.appendChild(t)}function B(){return`
+    `;return t}function j(t){let e=document.createElement("div");e.className="tryon-onboarding";let n=[{title:"Upload Your Photo",subtitle:"Show us what you look like",component:I(),index:0},{title:"Add Your Clothes",subtitle:"Drag up to 4 clothing items",component:M(),index:1},{title:"Generate Try-On",subtitle:"Create your virtual try-on",component:$(),index:2},{title:"See Your Result",subtitle:"Check out how you look",component:O(),index:3}],r=0,o=k(n,r,d=>{r=d,s()});e.appendChild(o);function s(){let d=n[r];o.style.opacity="0",setTimeout(()=>{o.innerHTML="";let a=k(n,r,i=>{r=i,s()});if(o.appendChild(a.firstChild),o.style.opacity="1",r===n.length-1){let i=document.createElement("button");i.className="tryon-btn-primary tryon-btn-onboarding-complete",i.textContent="Start Using Tryon!",i.addEventListener("click",t),o.appendChild(i)}},300)}return s(),e}function H(t){let e=document.createElement("div");e.className="tryon-image-result-container";let n=document.createElement("div");n.className="tryon-image-wrapper";let r=document.createElement("img");r.src=t,r.alt="Generated try-on result",r.className="tryon-result-image";let o=document.createElement("div");o.className="tryon-magnifier-lens";let s=document.createElement("div");s.className="tryon-magnifier-view",s.innerHTML=`<img src="${t}" alt="Magnified view" />`,n.appendChild(r),n.appendChild(o),e.appendChild(n),e.appendChild(s);let d=!1;n.addEventListener("mouseenter",()=>{d=!0,o.style.display="block",s.style.display="block"}),n.addEventListener("mouseleave",()=>{d=!1,o.style.display="none",s.style.display="none"}),n.addEventListener("mousemove",i=>{if(!d)return;let l=n.getBoundingClientRect(),c=i.clientX-l.left,m=i.clientY-l.top;o.style.left=c-50+"px",o.style.top=m-50+"px";let p=2;s.style.backgroundPosition=`-${c*p-150}px -${m*p-150}px`});let a=document.createElement("button");return a.className="tryon-btn-primary tryon-btn-download-result",a.textContent="Download Result",a.addEventListener("click",()=>{let i=document.createElement("a");i.href=t,i.download="tryon-result.png",i.click()}),e.appendChild(a),e}function F(){let t=window.TRYON_WIDGET_CONFIG;if(!t)throw new Error("Tryon Widget config not initialized");return t}function G(t,e){return f(this,null,function*(){let n=F(),r=e.filter(o=>o&&o.length>0);if(!t)throw new Error("User image is required");if(r.length===0)throw new Error("At least one clothing item is required");try{let o=yield fetch(`${n.apiUrl}/images/generate`,{method:"POST",headers:{"Content-Type":"application/json","x-client-key":n.apiKey},body:JSON.stringify({prompt:`A person wearing ${r.length>1?"multiple clothing items":"a clothing item"} from the provided images`,userImage:t,clothes:r})});if(!o.ok){let d=yield o.json().catch(()=>({}));throw new Error(d.error||`API error: ${o.status}`)}let s=yield o.json();if(!s.success)throw new Error(s.error||"Generation failed");return{url:s.url,generationId:s.generationId}}catch(o){throw console.error("Try-on generation error:",o),o}})}function P(){let t=document.createElement("div");t.className="tryon-main-ui";let e=document.createElement("div");e.className="tryon-main-header",e.innerHTML=`
+    <div class="tryon-logo-badge">TryOn Virtual</div>
+  `;let n=document.createElement("div");n.className="tryon-user-photo-section";let r=x("","Upload your Picture",p=>{v(p)},["image/jpeg","image/png","image/webp"],!1,!0);n.appendChild(r);let o=document.createElement("div");o.className="tryon-products-label",o.textContent="Drag the products";let s=document.createElement("div");s.className="tryon-clothes-grid-main";let d=C();for(let p=0;p<3;p++){let y=document.createElement("div");y.className="tryon-clothes-slot-main";let u=x("","",h=>{w(p,h)},["image/jpeg","image/png","image/webp"],!0,!1);if(y.appendChild(u),d[p]){let h=document.createElement("div");h.className="tryon-clothes-preview-main has-image",h.innerHTML=`<img src="${d[p]}" alt="Clothing ${p+1}" />`,y.appendChild(h)}s.appendChild(y)}let a=document.createElement("button");a.className="tryon-btn-create",a.textContent="Create",a.id="tryon-generate-btn",a.addEventListener("click",()=>f(this,null,function*(){yield m()}));let i=document.createElement("div");i.className="tryon-footer",i.innerHTML=`
+    <span class="tryon-footer-text">powered by TryOn.site</span>
+    <div class="tryon-footer-logo">
+      <span>TryOn</span>
+    </div>
+  `;let l=document.createElement("div");l.className="tryon-section tryon-section-result",l.id="tryon-result-section",t.appendChild(e),t.appendChild(n),t.appendChild(o),t.appendChild(s),t.appendChild(a),t.appendChild(i),t.appendChild(l);function c(){}function m(){return f(this,null,function*(){let p=localStorage.getItem("tryon-user-photo"),y=JSON.parse(localStorage.getItem("tryon-clothes")||"[]");if(!p){alert("Please upload your photo first");return}if(y.filter(u=>u).length===0){alert("Please add at least one clothing item");return}try{a.disabled=!0,a.textContent="Generating...",a.innerHTML='<span class="tryon-spinner"></span> Generating...';let u=yield G(p,y);T(u.url);let h=l;h.innerHTML="",h.appendChild(H(u.url))}catch(u){alert("Error generating image: "+u.message)}finally{a.disabled=!1,a.textContent="Generate Try-On"}})}return t}function U(t){let e=document.createElement("div");e.id="tryon-modal",e.className="tryon-modal";let n=document.createElement("div");n.className="tryon-modal-backdrop";let r=document.createElement("div");r.className="tryon-modal-wrapper";let o=document.createElement("button");o.className="tryon-modal-close",o.innerHTML="&times;",o.setAttribute("aria-label","Close modal");let s=document.createElement("div");s.className="tryon-modal-content",r.appendChild(o),r.appendChild(s),e.appendChild(n),e.appendChild(r);let d=!1,a="main";function i(){if(s.innerHTML="",a==="onboarding"){let m=j(()=>{S(!0),a="main",i()});s.appendChild(m)}else{let m=P();s.appendChild(m)}}function l(){d=!0,e.classList.add("tryon-modal-open"),z()?a="main":a="onboarding",i()}function c(){d=!1,e.classList.remove("tryon-modal-open"),s.innerHTML="",t==null||t()}return o.addEventListener("click",c),n.addEventListener("click",c),e.open=l,e.close=c,e}function A(){if(document.querySelector("#tryon-widget-styles"))return;let t=document.createElement("style");t.id="tryon-widget-styles",t.textContent=R(),document.head.appendChild(t)}function R(){return`
 /* ============================================================================
    Tryon Widget - Global Styles
    ============================================================================ */
 
 .tryon-widget-root {
-  --tryon-primary: #5CAEFF;
-  --tryon-primary-dark: #4A90E2;
+  --tryon-primary: #C4A57B;
+  --tryon-primary-dark: #B39564;
   --tryon-secondary: #6B7280;
-  --tryon-background: rgba(255, 255, 255, 0.95);
-  --tryon-background-dark: rgba(30, 30, 30, 0.5);
-  --tryon-border: rgba(0, 0, 0, 0.1);
+  --tryon-background: #F5F5F5;
+  --tryon-card-bg: #FFFFFF;
+  --tryon-border: #E5E7EB;
   --tryon-text: #1F2937;
   --tryon-text-light: #6B7280;
-  --tryon-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  --tryon-radius: 16px;
+  --tryon-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --tryon-radius: 20px;
+  --tryon-radius-sm: 12px;
   --tryon-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -173,9 +195,9 @@
   position: relative;
   margin: auto;
   width: 90%;
-  max-width: 500px;
+  max-width: 420px;
   height: auto;
-  max-height: 85vh;
+  max-height: 90vh;
   background: var(--tryon-background);
   border-radius: var(--tryon-radius);
   box-shadow: var(--tryon-shadow);
@@ -183,6 +205,7 @@
   flex-direction: column;
   overflow: hidden;
   animation: tryon-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  padding: 24px;
 }
 
 .tryon-modal-close {
@@ -211,7 +234,7 @@
 .tryon-modal-content {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 24px;
+  padding: 0;
 }
 
 /* ============================================================================
@@ -671,4 +694,145 @@
     transition-duration: 0.01ms !important;
   }
 }
-  `}var x=null;function R(){if(x)return x;U();let t=document.createElement("div");t.id="tryon-widget-container",t.className="tryon-widget-root",document.body.appendChild(t);let e=k(()=>{n.open()});t.appendChild(e);let n=A(()=>{});return t.appendChild(n),x={container:t,button:e,modal:n,destroy:()=>{t.remove(),x=null}},x}function Y(){let t=document.querySelectorAll("script"),e=null;for(let o of t)if(o.src&&o.src.includes("widget.js")){e=o;break}if(!e)return console.error("[Tryon Widget] Could not find widget script tag"),null;let n=e.getAttribute("data-tryon-key"),r=e.getAttribute("data-tryon-url")||"https://tryon-backend.vercel.app";return n?(window.TRYON_WIDGET_CONFIG={apiKey:n,apiUrl:r,scriptElement:e},{apiKey:n,apiUrl:r}):(console.error("[Tryon Widget] Missing required attribute: data-tryon-key"),null)}function D(){if(!Y()){console.warn("[Tryon Widget] Widget initialization cancelled due to missing configuration");return}R()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",D):D();})();
+
+/* ============================================================================
+   New Design - Specific Styles
+   ============================================================================ */
+
+.tryon-logo-badge {
+  background: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tryon-text);
+  display: inline-block;
+  margin: 0 auto 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.tryon-main-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tryon-user-photo-section {
+  margin-bottom: 16px;
+}
+
+.tryon-dropzone.large {
+  margin-bottom: 0;
+}
+
+.tryon-dropzone.large .tryon-dropzone-area {
+  background: white;
+  border: none;
+  border-radius: var(--tryon-radius);
+  padding: 60px 24px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--tryon-shadow);
+}
+
+.tryon-dropzone-icon-large {
+  color: var(--tryon-text-light);
+  margin-bottom: 12px;
+}
+
+.tryon-dropzone-placeholder-large {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tryon-text);
+}
+
+.tryon-products-label {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tryon-text);
+  margin: 16px 0 12px;
+}
+
+.tryon-clothes-grid-main {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tryon-clothes-slot-main {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--tryon-radius-sm);
+  background: white;
+  box-shadow: var(--tryon-shadow);
+}
+
+.tryon-dropzone.compact .tryon-dropzone-area {
+  background: white;
+  border: none;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tryon-dropzone-icon-compact {
+  color: var(--tryon-text-light);
+}
+
+.tryon-btn-create {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: var(--tryon-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--tryon-transition);
+  background: var(--tryon-primary);
+  color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(196, 165, 123, 0.3);
+}
+
+.tryon-btn-create:hover:not(:disabled) {
+  background: var(--tryon-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196, 165, 123, 0.4);
+}
+
+.tryon-btn-create:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tryon-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--tryon-border);
+  margin-top: auto;
+}
+
+.tryon-footer-text {
+  font-size: 12px;
+  color: var(--tryon-text-light);
+}
+
+.tryon-footer-logo {
+  background: var(--tryon-text);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+  `}var b=null;function B(){if(b)return b;A();let t=document.createElement("div");t.id="tryon-widget-container",t.className="tryon-widget-root",document.body.appendChild(t);let e=E(()=>{n.open()});t.appendChild(e);let n=U(()=>{});return t.appendChild(n),b={container:t,button:e,modal:n,destroy:()=>{t.remove(),b=null}},b}function W(){let t=document.querySelectorAll("script"),e=null;for(let o of t)if(o.src&&o.src.includes("widget.js")){e=o;break}if(!e)return console.error("[Tryon Widget] Could not find widget script tag"),null;let n=e.getAttribute("data-tryon-key"),r=e.getAttribute("data-tryon-url")||"https://tryon-backend.vercel.app";return n?(window.TRYON_WIDGET_CONFIG={apiKey:n,apiUrl:r,scriptElement:e},{apiKey:n,apiUrl:r}):(console.error("[Tryon Widget] Missing required attribute: data-tryon-key"),null)}function D(){if(!W()){console.warn("[Tryon Widget] Widget initialization cancelled due to missing configuration");return}B()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",D):D();})();
