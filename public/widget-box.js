@@ -310,18 +310,22 @@
       generateBtn.textContent = 'Generando...';
       
       try {
-        // Create FormData
-        const formData = new FormData();
-        formData.append('userPhoto', userPhotoFile);
-        formData.append('clothingItem', clothingFile);
+        // Convert files to base64
+        const userPhotoBase64 = await fileToBase64(userPhotoFile);
+        const clothingBase64 = await fileToBase64(clothingFile);
         
-        // Send to backend
+        // Send to backend as JSON
         const response = await fetch('https://tryon-backend-delta.vercel.app/api/images/generate', {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             'x-client-key': apiKey,
           },
-          body: formData,
+          body: JSON.stringify({
+            userPhotoBase64,
+            clothingBase64,
+            prompt: 'professional fashion try-on photo',
+          }),
         });
         
         if (!response.ok) {
@@ -330,14 +334,14 @@
         
         const data = await response.json();
         
-        if (data.imageUrl) {
+        if (data.url) {
           // Show result
           content.innerHTML = `
             <div style="padding: 20px 0;">
               <p style="margin: 0 0 15px 0; color: #333; font-size: 14px; font-weight: 600;">
                 ✨ Tu Try-On está listo:
               </p>
-              <img src="${data.imageUrl}" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+              <img src="${data.url}" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
               <button onclick="location.reload()" style="
                 width: 100%;
                 padding: 10px;
@@ -359,6 +363,19 @@
         generateBtn.disabled = false;
         generateBtn.textContent = 'Generar Try-On';
       }
+    }
+    
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // Extract base64 string without data:image/...;base64, prefix
+          const base64String = reader.result.split(',')[1];
+          resolve(base64String);
+        };
+        reader.onerror = error => reject(error);
+      });
     }
     
     function togglePanel() {

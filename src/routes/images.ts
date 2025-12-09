@@ -32,7 +32,7 @@ const router = Router();
  */
 router.post('/generate', validateClient, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { prompt, metadata } = req.body;
+    const { prompt, userPhotoBase64, clothingBase64, metadata } = req.body;
     const empresa = req.empresa;
     const empresaId = req.empresaId;
 
@@ -46,42 +46,48 @@ router.post('/generate', validateClient, async (req: Request, res: Response): Pr
       return;
     }
 
-    // Validación de input - permitir prompt O archivos
+    // Validación de input - permitir base64 JSON O archivos FormData OR prompt
     let inputPrompt = prompt;
-    let userPhotoBase64: string | null = null;
-    let clothingBase64: string | null = null;
+    let userPhotoB64: string | null = userPhotoBase64 || null;
+    let clothingB64: string | null = clothingBase64 || null;
     
-    if (req.files && (req.files.userPhoto || req.files.clothingItem)) {
-      // Modo try-on con archivos
-      const userPhotoFile = Array.isArray(req.files.userPhoto) 
-        ? req.files.userPhoto[0] 
-        : req.files.userPhoto;
-      const clothingFile = Array.isArray(req.files.clothingItem)
-        ? req.files.clothingItem[0]
-        : req.files.clothingItem;
+    // Si no hay base64 en JSON, intentar desde FormData
+    if (!userPhotoB64 || !clothingB64) {
+      if (req.files && (req.files.userPhoto || req.files.clothingItem)) {
+        // Modo try-on con archivos
+        const userPhotoFile = Array.isArray(req.files.userPhoto) 
+          ? req.files.userPhoto[0] 
+          : req.files.userPhoto;
+        const clothingFile = Array.isArray(req.files.clothingItem)
+          ? req.files.clothingItem[0]
+          : req.files.clothingItem;
 
-      if (!userPhotoFile || !clothingFile) {
+        if (!userPhotoFile || !clothingFile) {
+          res.status(400).json({
+            success: false,
+            error: 'Missing required files: userPhoto and clothingItem',
+            timestamp: new Date().toISOString(),
+          });
+          return;
+        }
+
+        // Convertir archivos a base64
+        userPhotoB64 = userPhotoFile.data.toString('base64');
+        clothingB64 = clothingFile.data.toString('base64');
+
+        // Generar prompt basado en los archivos
+        inputPrompt = 'A person wearing stylish clothing in a professional try-on photo, high quality, well-lit, model showcase';
+      } else if (!inputPrompt || typeof inputPrompt !== 'string' || inputPrompt.trim().length === 0) {
         res.status(400).json({
           success: false,
-          error: 'Missing required files: userPhoto and clothingItem',
+          error: 'Missing either base64 images (userPhotoBase64, clothingBase64) in JSON body, files (userPhoto, clothingItem) in FormData, or prompt',
           timestamp: new Date().toISOString(),
         });
         return;
       }
-
-      // Convertir archivos a base64
-      userPhotoBase64 = userPhotoFile.data.toString('base64');
-      clothingBase64 = clothingFile.data.toString('base64');
-
-      // Generar prompt basado en los archivos
-      inputPrompt = 'A person wearing stylish clothing in a professional try-on photo, high quality, well-lit, model showcase';
-    } else if (!inputPrompt || typeof inputPrompt !== 'string' || inputPrompt.trim().length === 0) {
-      res.status(400).json({
-        success: false,
-        error: 'Missing either files (userPhoto, clothingItem) or prompt',
-        timestamp: new Date().toISOString(),
-      });
-      return;
+    } else {
+      // Tenemos base64 en JSON, generar prompt si no existe
+      inputPrompt = inputPrompt || 'A person wearing stylish clothing in a professional try-on photo, high quality, well-lit, model showcase';
     }
 
     // Validar dailyLimit si está configurado
@@ -100,8 +106,8 @@ router.post('/generate', validateClient, async (req: Request, res: Response): Pr
 
     // Llamar a Banana PRO para generar imagen
     const generationResult = await imageProviders.generate(inputPrompt, {
-      userPhotoBase64,
-      clothingBase64,
+      userPhotoBase64: userPhotoB64,
+      clothingBase64: clothingB64,
     });
 
     // Registrar uso en usageService
