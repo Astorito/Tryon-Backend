@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
+import fileUpload from 'express-fileupload';
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,9 @@ const app: Express = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max file size
+}));
 
 // CSP header for widget compatibility
 app.use((req: Request, res: Response, next: NextFunction) => {
