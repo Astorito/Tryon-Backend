@@ -25,6 +25,15 @@ import empresasRoutes from './routes/empresas';
 
 const app: Express = express();
 
+// Handle preflight requests FIRST (before any other middleware)
+app.options('*', (req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-client-key, x-admin-key, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(200).end();
+});
+
 // Middleware
 app.use(cors({
   origin: '*',
@@ -50,13 +59,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use(validateProviderEnv);
-
-// Explicit CORS handling for preflight requests
-app.options('*', cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'x-client-key', 'x-admin-key', 'Authorization'],
-}));
 
 // Serve static files from public directory
 let publicPath: string;
