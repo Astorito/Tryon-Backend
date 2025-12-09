@@ -175,46 +175,128 @@
           4. ¡Mira el resultado!
         </p>
       </div>
-      
-      <button id="tryon-start-btn" style="
-        width: 100%;
-        padding: 12px;
-        background: linear-gradient(135deg, #c9b896 0%, #a89968 100%);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s;
-      ">
-        Comenzar
-      </button>
-      
-      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-        <p style="margin: 0 0 10px 0; font-size: 12px; color: #999; font-weight: 600; text-transform: uppercase;">
-          Estado
-        </p>
-        <p style="margin: 0; font-size: 13px; color: #666; background: #f5f5f5; padding: 10px; border-radius: 4px;">
-          Cliente: <strong>${apiKey}</strong>
-        </p>
-      </div>
+
+      <form id="tryon-form" style="display: flex; flex-direction: column; gap: 15px;">
+        <!-- Tu foto -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #333;">
+            Tu Foto
+          </label>
+          <input 
+            type="file" 
+            id="user-photo" 
+            accept="image/*"
+            style="width: 100%; padding: 10px; border: 2px dashed #c9b896; border-radius: 6px; cursor: pointer; font-size: 12px;"
+          />
+          <div id="user-photo-preview" style="margin-top: 10px; text-align: center; display: none;">
+            <img id="user-photo-img" src="" style="max-width: 100%; max-height: 150px; border-radius: 6px; border: 1px solid #eee;">
+          </div>
+        </div>
+
+        <!-- Prenda -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #333;">
+            Prenda de Ropa
+          </label>
+          <input 
+            type="file" 
+            id="clothing-item" 
+            accept="image/*"
+            style="width: 100%; padding: 10px; border: 2px dashed #c9b896; border-radius: 6px; cursor: pointer; font-size: 12px;"
+          />
+          <div id="clothing-preview" style="margin-top: 10px; text-align: center; display: none;">
+            <img id="clothing-img" src="" style="max-width: 100%; max-height: 150px; border-radius: 6px; border: 1px solid #eee;">
+          </div>
+        </div>
+
+        <button 
+          type="button"
+          id="tryon-generate-btn"
+          style="
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #c9b896 0%, #a89968 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+          "
+          disabled
+        >
+          Generar Try-On
+        </button>
+      </form>
     `;
     
     panel.appendChild(content);
     document.body.appendChild(panel);
     
-    // Button click handler
-    const startBtn = document.getElementById('tryon-start-btn');
-    if (startBtn) {
-      startBtn.addEventListener('click', () => {
-        alert('🚀 Widget full en desarrollo.\n\nAPI Key: ' + apiKey);
+    // File input handlers
+    let userPhotoFile = null;
+    let clothingFile = null;
+    
+    const userPhotoInput = document.getElementById('user-photo');
+    const userPhotoPreview = document.getElementById('user-photo-preview');
+    const userPhotoImg = document.getElementById('user-photo-img');
+    const clothingInput = document.getElementById('clothing-item');
+    const clothingPreview = document.getElementById('clothing-preview');
+    const clothingImg = document.getElementById('clothing-img');
+    const generateBtn = document.getElementById('tryon-generate-btn');
+    
+    if (userPhotoInput) {
+      userPhotoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          userPhotoFile = file;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            userPhotoImg.src = event.target.result;
+            userPhotoPreview.style.display = 'block';
+            checkFormComplete();
+          };
+          reader.readAsDataURL(file);
+        }
       });
-      startBtn.addEventListener('mouseenter', () => {
-        startBtn.style.transform = 'translateY(-2px)';
+    }
+    
+    if (clothingInput) {
+      clothingInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          clothingFile = file;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            clothingImg.src = event.target.result;
+            clothingPreview.style.display = 'block';
+            checkFormComplete();
+          };
+          reader.readAsDataURL(file);
+        }
       });
-      startBtn.addEventListener('mouseleave', () => {
-        startBtn.style.transform = 'translateY(0)';
+    }
+    
+    function checkFormComplete() {
+      if (userPhotoFile && clothingFile) {
+        generateBtn.disabled = false;
+      }
+    }
+    
+    if (generateBtn) {
+      generateBtn.addEventListener('click', () => {
+        alert('🚀 Generando Try-On...\n\nAPI Key: ' + apiKey);
+        // TODO: Aquí va la lógica para enviar a la API
+      });
+      generateBtn.addEventListener('mouseenter', () => {
+        if (!generateBtn.disabled) {
+          generateBtn.style.transform = 'translateY(-2px)';
+        }
+      });
+      generateBtn.addEventListener('mouseleave', () => {
+        generateBtn.style.transform = 'translateY(0)';
       });
     }
     
