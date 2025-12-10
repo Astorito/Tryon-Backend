@@ -58,6 +58,7 @@ img {
   line-height: 1.5;
   color: #1F2937;
   pointer-events: auto;
+  min-height: 60px;
   
   --tryon-primary: #C4A57B;
   --tryon-primary-dark: #B39564;
@@ -142,19 +143,18 @@ img {
    ============================================================================ */
 
 .tryon-modal {
-  position: fixed;
-  bottom: 100px;
-  right: 24px;
+  position: absolute;
+  bottom: 80px;
+  right: 0;
   display: none;
   z-index: 9999;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   color: var(--tryon-text);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .tryon-modal.tryon-modal-open {
   display: block;
-  pointer-events: auto;
 }
 
 /* NO backdrop for popover mode */
@@ -170,12 +170,13 @@ img {
   max-height: calc(100vh - 140px);
   background: var(--tryon-background);
   border-radius: var(--tryon-radius);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   animation: tryon-slide-up-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   padding: 24px;
+  border: 1px solid var(--tryon-border);
 }
 
 /* Popover specific wrapper */
@@ -210,7 +211,9 @@ img {
 .tryon-modal-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0;
+  border-radius: var(--tryon-radius-sm);
 }
 
 /* ============================================================================
