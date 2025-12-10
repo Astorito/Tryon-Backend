@@ -17,17 +17,17 @@ function getWidgetConfig() {
     }
   }
 
-  if (!scriptElement) {
-    console.error('[Tryon Widget] Could not find widget script tag');
-    return null;
-  }
+  // Default configuration
+  let apiKey = 'default-widget-key';
+  let apiUrl = 'https://tryon-backend-delta.vercel.app/api';
 
-  const apiKey = scriptElement.getAttribute('data-tryon-key');
-  const apiUrl = scriptElement.getAttribute('data-tryon-url') || 'https://tryon-backend.vercel.app';
-
-  if (!apiKey) {
-    console.error('[Tryon Widget] Missing required attribute: data-tryon-key');
-    return null;
+  // Override with script attributes if present
+  if (scriptElement) {
+    const keyAttr = scriptElement.getAttribute('data-tryon-key');
+    const urlAttr = scriptElement.getAttribute('data-tryon-url');
+    
+    if (keyAttr) apiKey = keyAttr;
+    if (urlAttr) apiUrl = urlAttr;
   }
 
   // Store config in window for access by other modules
@@ -46,12 +46,8 @@ function getWidgetConfig() {
 // Initialize the widget when DOM is ready
 function initializeWidget() {
   const config = getWidgetConfig();
-
-  if (!config) {
-    console.warn('[Tryon Widget] Widget initialization cancelled due to missing configuration');
-    return;
-  }
-
+  
+  console.log('[Tryon Widget] Initializing with config:', config);
   createWidget();
 }
 
