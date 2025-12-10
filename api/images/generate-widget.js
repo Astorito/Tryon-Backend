@@ -1,13 +1,87 @@
-// Specific serverless function for generate-widget endpoint
-// This bypasses the main app routing to handle CORS properly
+/**
+ * Serverless function for generate-widget endpoint
+ * LIGHTWEIGHT - No Prisma, No DB, Just Banana AI + Metrics
+ */
 
-import { PrismaClient } from '@prisma/client';
-import crypto from 'crypto';
+/**
+ * Generate image with Banana AI
+ */
+async function generateWithBanana(userImage, clothingImage) {
+  const bananaApiKey = process.env.BANANA_API_KEY;
+  const bananaModelKey = process.env.BANANA_MODEL_KEY || 'banana-pro-v1';
 
-const prisma = new PrismaClient();
+  if (!bananaApiKey) {
+    throw new Error('BANANA_API_KEY not configured');
+  }
 
+  const response = await fetch('https://api.banana.dev/start/v4/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      apiKey: bananaApiKey,
+      modelKey: bananaModelKey,
+      modelInputs: {
+        human_img: userImage,
+        garm_img: clothingImage,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Banana API error: ${error}`);
+  }
+
+  const data = await response.json();
+
+  if (!data.modelOutputs?.[0]?.image_base64) {
+    throw new Error(data.message || 'No image returned from Banana AI');
+  }
+
+  const imageBase64 = data.modelOutputs[0].image_base64;
+  const resultImage = imageBase64.startsWith('data:') 
+    ? imageBase64 
+    : `data:image/png;base64,${imageBase64}`;
+
+  return {
+    resultImage,
+    extras: {
+      callId: data.callID || null,
+      created: data.created || Date.now(),
+    },
+  };
+}
+
+/**
+ * Send metric to analytics backend (fire-and-forget)
+ */
+function sendMetricAsync(clientKey) {
+  if (!clientKey) return;
+
+  // Fire and forget - no await, no error handling affecting main flow
+  fetch('https://tryon-metrics.vercel.app/api/ingest', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-client-key': clientKey,
+    },
+    body: JSON.stringify({
+      type: 'generation',
+      clientKey: clientKey,
+    }),
+  }).catch((error) => {
+    // Silent fail - metrics should never break the main flow
+    console.warn('Metrics ingestion failed (non-critical):', error.message);
+  });
+}
+
+/**
+ * Main handler
+ */
 export default async function handler(req, res) {
-  // Set CORS headers
+  // CORS headers - must be first
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-client-key, x-admin-key, Authorization');
@@ -24,85 +98,43 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Extract and validate inputs
     const { userPhotoBase64, clothingBase64, apiKey } = req.body;
 
-    if (!apiKey) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing apiKey in request body',
-      });
+    if (!userPhotoBase64) {
+      return res.status(400).json({ error: 'Missing userPhotoBase64' });
     }
 
-    // Get company by API key
-    const empresa = await prisma.empresa.findUnique({
-      where: { apiKey },
-    });
-
-    if (!empresa) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid API key',
-      });
+    if (!clothingBase64) {
+      return res.status(400).json({ error: 'Missing clothingBase64' });
     }
 
-    if (!userPhotoBase64 || !clothingBase64) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: userPhotoBase64 and clothingBase64',
-      });
-    }
+    // clientKey is optional but recommended for metrics
+    const clientKey = apiKey || 'anonymous';
 
-    // Call Banana PRO API
-    const bananaApiKey = process.env.BANANA_API_KEY;
-    const bananaModelKey = process.env.BANANA_MODEL_KEY || 'banana-pro-v1';
+    // Generate image with Banana AI
+    const { resultImage, extras } = await generateWithBanana(
+      userPhotoBase64,
+      clothingBase64
+    );
 
-    if (!bananaApiKey) {
-      throw new Error('BANANA_API_KEY not configured');
-    }
+    // Send metrics asynchronously (fire-and-forget)
+    sendMetricAsync(clientKey);
 
-    const bananaResponse = await fetch('https://api.banana.dev/start/v4/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        apiKey: bananaApiKey,
-        modelKey: bananaModelKey,
-        modelInputs: {
-          garm_img: clothingBase64,
-          human_img: userPhotoBase64,
-        },
-      }),
-    });
-
-    const bananaData = await bananaResponse.json();
-
-    if (!bananaResponse.ok || !bananaData.modelOutputs?.[0]?.image_base64) {
-      throw new Error(bananaData.message || 'Banana API error');
-    }
-
-    const imageBase64 = bananaData.modelOutputs[0].image_base64;
-    const imageUrl = imageBase64.startsWith('data:') 
-      ? imageBase64 
-      : `data:image/png;base64,${imageBase64}`;
-
-    const generationId = crypto.randomUUID();
-
+    // Success response
     return res.status(200).json({
       success: true,
-      url: imageUrl,
-      generationId,
-      stats: {
-        totalToday: 0,
-        dailyLimit: empresa.dailyLimit,
-      },
+      url: resultImage,
+      resultImage: resultImage,
+      extras: extras,
     });
+
   } catch (error) {
-    console.error('Error in generate-widget handler:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Internal server error',
-      details: error.message 
+    console.error('Error in generate-widget:', error);
+    
+    return res.status(500).json({
+      error: error.message || 'Internal server error',
+      success: false,
     });
   }
 }
