@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TryOn Widget - Shadow DOM Test</title>
+  
+  <!-- Tailwind CSS para simular el host -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* Estilos agresivos del host para probar el aislamiento */
+    body {
+      font-family: 'Comic Sans MS', cursive !important;
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem;
+    }
+    
+    * {
+      border: 2px solid red !important;
+      margin: 10px !important;
+    }
+    
+    div {
+      background: yellow !important;
+      padding: 20px !important;
+    }
+    
+    button {
+      background: lime !important;
+      color: red !important;
+      font-size: 30px !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  
+  <div class="bg-white p-8 rounded-lg shadow-xl max-w-2xl">
+    <h1 class="text-3xl font-bold mb-4 text-gray-800">
+      🧪 TryOn Widget - Shadow DOM Test
+    </h1>
+    
+    <p class="text-gray-600 mb-6">
+      Este sitio tiene estilos CSS agresivos (Tailwind + resets + borders rojos) 
+      para probar que el widget NO se vea afectado por los estilos del host.
+    </p>
+    
+    <div class="bg-blue-100 p-4 rounded mb-6">
+      <h2 class="font-bold mb-2">Qué esperar:</h2>
+      <ul class="list-disc list-inside space-y-1 text-sm">
+        <li>El widget debe aparecer abajo-derecha</li>
+        <li>NO debe tener borders rojos</li>
+        <li>NO debe tener background amarillo</li>
+        <li>Debe verse con sus colores originales (beige/marrón)</li>
+        <li>El layout debe ser vertical, NO horizontal</li>
+      </ul>
+    </div>
+    
+    <p class="text-sm text-gray-500">
+      Si el widget se ve deformado, significa que los estilos del host están 
+      penetrando el Shadow DOM.
+    </p>
+  </div>
+  
+  <!-- Contenedor para el widget con Shadow DOM -->
+  <div id="tryon-widget-container" class="fixed bottom-4 right-4 z-50"></div>
+  
+  <!-- Widget script -->
+  <script 
+    src="/widget.js" 
+    data-tryon-key="testtryon01"
+    data-tryon-url="https://tryon-backend-delta.vercel.app/api"
+  ></script>
+  
+</body>
+</html>

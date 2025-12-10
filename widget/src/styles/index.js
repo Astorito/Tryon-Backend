@@ -1,28 +1,64 @@
 /**
- * Styles Injector
- * Injects all widget styles into the page
+ * Styles Module
+ * Returns all widget styles for Shadow DOM isolation
  */
 
+// Deprecated: for backward compatibility
 export function injectStyles() {
-  // Check if styles already injected
-  if (document.querySelector('#tryon-widget-styles')) {
-    return;
-  }
-
-  const style = document.createElement('style');
-  style.id = 'tryon-widget-styles';
-  style.textContent = getStyles();
-
-  document.head.appendChild(style);
+  console.warn('[TryOn Widget] injectStyles is deprecated, using Shadow DOM now');
 }
 
-function getStyles() {
+export function getStyles() {
   return `
 /* ============================================================================
-   Tryon Widget - Global Styles
+   Shadow DOM Reset - Prevent host styles from bleeding in
+   ============================================================================ */
+
+:host {
+  all: initial;
+  display: block;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+/* Reset all elements to prevent inheritance from host */
+* {
+  all: unset;
+  display: revert;
+  box-sizing: border-box;
+}
+
+/* Restore default element behavior */
+div, span, button, input, img, svg, form, label {
+  display: block;
+}
+
+button, input[type="file"] {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============================================================================
+   Tryon Widget - Variables & Base Styles
    ============================================================================ */
 
 .tryon-widget-root {
+  all: initial;
+  display: block;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1F2937;
+  pointer-events: auto;
+  
   --tryon-primary: #C4A57B;
   --tryon-primary-dark: #B39564;
   --tryon-secondary: #6B7280;
