@@ -10,15 +10,12 @@ import { hasSeenOnboarding, setOnboardingSeen } from '../utils/storage.js';
 export function createModal(onCloseCallback) {
   const modal = document.createElement('div');
   modal.id = 'tryon-modal';
-  modal.className = 'tryon-modal';
+  modal.className = 'tryon-modal tryon-modal-popover';
 
-  // Modal backdrop
-  const backdrop = document.createElement('div');
-  backdrop.className = 'tryon-modal-backdrop';
-
+  // NO backdrop - popover style
   // Modal content wrapper
   const contentWrapper = document.createElement('div');
-  contentWrapper.className = 'tryon-modal-wrapper';
+  contentWrapper.className = 'tryon-modal-wrapper tryon-modal-popover-wrapper';
 
   // Close button
   const closeBtn = document.createElement('button');
@@ -30,10 +27,9 @@ export function createModal(onCloseCallback) {
   const content = document.createElement('div');
   content.className = 'tryon-modal-content';
 
-  // Assemble modal
+  // Assemble modal (popover style - no backdrop)
   contentWrapper.appendChild(closeBtn);
   contentWrapper.appendChild(content);
-  modal.appendChild(backdrop);
   modal.appendChild(contentWrapper);
 
   // Modal state
@@ -83,7 +79,6 @@ export function createModal(onCloseCallback) {
 
   // Event listeners
   closeBtn.addEventListener('click', close);
-  backdrop.addEventListener('click', close);
 
   // Expose methods
   modal.open = open;

@@ -102,46 +102,50 @@ function getStyles() {
 }
 
 /* ============================================================================
-   Modal
+   Modal - Popover Style (NO backdrop, NO full screen)
    ============================================================================ */
 
 .tryon-modal {
   position: fixed;
-  inset: 0;
+  bottom: 100px;
+  right: 24px;
   display: none;
-  z-index: 10000;
+  z-index: 9999;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   color: var(--tryon-text);
+  pointer-events: none;
 }
 
 .tryon-modal.tryon-modal-open {
-  display: flex;
+  display: block;
+  pointer-events: auto;
 }
 
+/* NO backdrop for popover mode */
 .tryon-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  opacity: 0;
-  animation: tryon-fade-in 0.3s ease-out forwards;
+  display: none !important;
 }
 
 .tryon-modal-wrapper {
   position: relative;
-  margin: auto;
-  width: 90%;
-  max-width: 420px;
+  width: 380px;
+  max-width: calc(100vw - 48px);
   height: auto;
-  max-height: 90vh;
+  max-height: calc(100vh - 140px);
   background: var(--tryon-background);
   border-radius: var(--tryon-radius);
-  box-shadow: var(--tryon-shadow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: tryon-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: tryon-slide-up-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   padding: 24px;
+}
+
+/* Popover specific wrapper */
+.tryon-modal-popover-wrapper {
+  width: 380px;
+  max-height: calc(100vh - 140px);
 }
 
 .tryon-modal-close {
@@ -556,14 +560,30 @@ function getStyles() {
   }
 }
 
+@keyframes tryon-slide-up-right {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* ============================================================================
    Responsive
    ============================================================================ */
 
 @media (max-width: 640px) {
+  .tryon-modal {
+    right: 12px;
+    bottom: 80px;
+  }
+
   .tryon-modal-wrapper {
-    width: 95%;
-    max-height: 90vh;
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 120px);
     border-radius: 20px;
   }
 
@@ -595,11 +615,15 @@ function getStyles() {
 }
 
 @media (max-width: 400px) {
+  .tryon-modal {
+    right: 8px;
+    bottom: 70px;
+  }
+
   .tryon-modal-wrapper {
-    width: 100%;
-    max-height: 100vh;
-    border-radius: 20px 20px 0 0;
-    max-height: calc(100dvh - 10px);
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 100px);
+    border-radius: 16px;
   }
 
   .tryon-modal-content {
