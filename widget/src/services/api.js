@@ -26,16 +26,15 @@ export async function generateTryOn(userImageBase64, clothesImagesBase64Array) {
   }
 
   try {
-    const response = await fetch(`${config.apiUrl}/images/generate`, {
+    const response = await fetch(`${config.apiUrl}/generate-widget`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-client-key': config.apiKey,
       },
       body: JSON.stringify({
-        prompt: `A person wearing ${clothes.length > 1 ? 'multiple clothing items' : 'a clothing item'} from the provided images`,
-        userImage: userImageBase64,
-        clothes,
+        userPhotoBase64: userImageBase64,
+        clothingBase64: clothes[0], // Use first clothing item
+        apiKey: config.apiKey,
       }),
     });
 
