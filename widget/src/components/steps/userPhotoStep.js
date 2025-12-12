@@ -14,10 +14,17 @@ export function createUserPhotoStep() {
     'Drag your photo here or click to select',
     (imageData) => {
       storeUserPhoto(imageData);
-      // Show preview
+      // Show preview (CSP-safe)
       const preview = container.querySelector('.tryon-photo-preview');
       if (preview) {
-        preview.innerHTML = `<img src="${imageData}" alt="Your photo" />`;
+        // Clear existing content
+        while (preview.firstChild) {
+          preview.removeChild(preview.firstChild);
+        }
+        const img = document.createElement('img');
+        img.src = imageData;
+        img.alt = 'Your photo';
+        preview.appendChild(img);
         preview.classList.add('has-image');
       }
     },
@@ -26,12 +33,17 @@ export function createUserPhotoStep() {
 
   container.appendChild(dropzone);
 
-  // Show existing photo if available
+  // Show existing photo if available (CSP-safe)
   const userPhoto = getUserPhoto();
   if (userPhoto) {
     const preview = document.createElement('div');
     preview.className = 'tryon-photo-preview has-image';
-    preview.innerHTML = `<img src="${userPhoto}" alt="Your photo" />`;
+    
+    const img = document.createElement('img');
+    img.src = userPhoto;
+    img.alt = 'Your photo';
+    preview.appendChild(img);
+    
     container.appendChild(preview);
   }
 

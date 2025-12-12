@@ -17,10 +17,10 @@ export function createModal(onCloseCallback) {
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'tryon-modal-wrapper tryon-modal-popover-wrapper';
 
-  // Close button
+  // Close button (CSP-safe)
   const closeBtn = document.createElement('button');
   closeBtn.className = 'tryon-modal-close';
-  closeBtn.innerHTML = '&times;';
+  closeBtn.textContent = '×'; // Unicode character instead of HTML entity
   closeBtn.setAttribute('aria-label', 'Close modal');
 
   // Main content area (will be populated dynamically)
@@ -38,7 +38,10 @@ export function createModal(onCloseCallback) {
 
   // Load appropriate view
   function loadView() {
-    content.innerHTML = '';
+    // Clear content (CSP-safe)
+    while (content.firstChild) {
+      content.removeChild(content.firstChild);
+    }
 
     if (currentView === 'onboarding') {
       const onboarding = createOnboarding(() => {
@@ -73,7 +76,10 @@ export function createModal(onCloseCallback) {
   function close() {
     isOpen = false;
     modal.classList.remove('tryon-modal-open');
-    content.innerHTML = '';
+    // Clear content (CSP-safe)
+    while (content.firstChild) {
+      content.removeChild(content.firstChild);
+    }
     onCloseCallback?.();
   }
 

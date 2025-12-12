@@ -26,10 +26,17 @@ export function createClothesStep() {
       'Drag image',
       (imageData) => {
         storeClothes(i, imageData);
-        // Update preview
+        // Update preview (CSP-safe)
         const preview = slot.querySelector('.tryon-clothes-preview');
         if (preview) {
-          preview.innerHTML = `<img src="${imageData}" alt="Clothing item ${i + 1}" />`;
+          // Clear existing content
+          while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+          }
+          const img = document.createElement('img');
+          img.src = imageData;
+          img.alt = `Clothing item ${i + 1}`;
+          preview.appendChild(img);
           preview.classList.add('has-image');
         }
       },
@@ -39,11 +46,16 @@ export function createClothesStep() {
 
     slot.appendChild(dropzone);
 
-    // Show existing clothes if available
+    // Show existing clothes if available (CSP-safe)
     if (clothes[i]) {
       const preview = document.createElement('div');
       preview.className = 'tryon-clothes-preview has-image';
-      preview.innerHTML = `<img src="${clothes[i]}" alt="Clothing item ${i + 1}" />`;
+      
+      const img = document.createElement('img');
+      img.src = clothes[i];
+      img.alt = `Clothing item ${i + 1}`;
+      preview.appendChild(img);
+      
       slot.appendChild(preview);
     }
 

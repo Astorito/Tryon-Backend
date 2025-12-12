@@ -61,8 +61,12 @@ export function createOnboarding(onCompleteCallback) {
 
     // Fade animation
     stepContainer.style.opacity = '0';
+    // setTimeout with function callback is CSP-safe ✓
     setTimeout(() => {
-      stepContainer.innerHTML = '';
+      // Clear content (CSP-safe)
+      while (stepContainer.firstChild) {
+        stepContainer.removeChild(stepContainer.firstChild);
+      }
 
       const newStepContainer = createStepContainer(
         steps,

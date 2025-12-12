@@ -15,20 +15,37 @@ export function createStepContainer(steps, currentStep, onStepChange) {
   const stepContent = document.createElement('div');
   stepContent.className = 'tryon-step-content';
 
-  // Step indicator
+  // Step indicator (CSP-safe)
   const stepIndicator = document.createElement('div');
   stepIndicator.className = 'tryon-step-indicator';
 
   const step = steps[currentStep];
-  stepIndicator.innerHTML = `
-    <div class="tryon-step-title">${step.title}</div>
-    <div class="tryon-step-subtitle">${step.subtitle}</div>
-    <div class="tryon-step-progress">
-      ${steps.map((_, i) => `
-        <div class="tryon-step-dot ${i === currentStep ? 'active' : ''} ${i < currentStep ? 'completed' : ''}"></div>
-      `).join('')}
-    </div>
-  `;
+  
+  // Title
+  const title = document.createElement('div');
+  title.className = 'tryon-step-title';
+  title.textContent = step.title;
+  
+  // Subtitle
+  const subtitle = document.createElement('div');
+  subtitle.className = 'tryon-step-subtitle';
+  subtitle.textContent = step.subtitle;
+  
+  // Progress dots
+  const progress = document.createElement('div');
+  progress.className = 'tryon-step-progress';
+  
+  steps.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'tryon-step-dot';
+    if (i === currentStep) dot.classList.add('active');
+    if (i < currentStep) dot.classList.add('completed');
+    progress.appendChild(dot);
+  });
+  
+  stepIndicator.appendChild(title);
+  stepIndicator.appendChild(subtitle);
+  stepIndicator.appendChild(progress);
 
   // Add component to step content
   stepContent.appendChild(stepIndicator);

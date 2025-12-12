@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TryOn Widget - CSP-Safe Demo</title>
+  
+  <!-- CSP ESTRICTO - El widget funciona perfectamente con esta política -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://tryon-backend-delta.vercel.app;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https://tryon-backend-delta.vercel.app;
+    font-src 'self';
+    frame-src 'none';
+  ">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      padding: 60px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .subtitle {
+      text-align: center;
+      font-size: 1.4rem;
+      color: #666;
+      margin-bottom: 40px;
+    }
+    
+    .csp-badge {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 0 auto 40px;
+      display: block;
+      width: fit-content;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .feature {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .feature:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+    
+    .feature h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .feature p {
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    .csp-info {
+      background: #e0e7ff;
+      border-left: 4px solid #667eea;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 40px;
+    }
+    
+    .csp-info h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .csp-info code {
+      background: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #e83e8c;
+    }
+    
+    .csp-info ul {
+      margin-top: 15px;
+      padding-left: 25px;
+    }
+    
+    .csp-info li {
+      margin-bottom: 8px;
+      color: #444;
+      line-height: 1.6;
+    }
+    
+    .cta {
+      text-align: center;
+      margin-top: 50px;
+    }
+    
+    .cta-text {
+      font-size: 1.3rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    
+    .arrow {
+      font-size: 2rem;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .note {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 40px;
+    }
+    
+    .note strong {
+      color: #856404;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 2px solid #eee;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔒 TryOn Widget CSP-Safe</h1>
+    <p class="subtitle">Widget de prueba virtual 100% compatible con Content Security Policy</p>
+    
+    <div class="csp-badge">
+      ✅ CSP Strict Mode Enabled
+    </div>
+    
+    <div class="csp-info">
+      <h3>🛡️ Política CSP Activa en esta Página</h3>
+      <p>Este sitio tiene una CSP <strong>extremadamente estricta</strong>:</p>
+      <ul>
+        <li>❌ <code>eval()</code> bloqueado</li>
+        <li>❌ <code>new Function()</code> bloqueado</li>
+        <li>❌ <code>setTimeout(string)</code> bloqueado</li>
+        <li>❌ Scripts inline bloqueados</li>
+        <li>✅ Solo scripts externos desde dominios permitidos</li>
+      </ul>
+      <p style="margin-top: 15px;"><strong>El widget funciona perfectamente porque usa solo métodos DOM seguros.</strong></p>
+    </div>
+    
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🚫</div>
+        <h3>Sin eval()</h3>
+        <p>No ejecuta código dinámico desde strings. Todo es código precompilado.</p>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">🏗️</div>
+        <h3>Solo DOM API</h3>
+        <p>Construye UI usando createElement(), appendChild() y métodos DOM nativos.</p>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">🎨</div>
+        <h3>Shadow DOM</h3>
+        <p>Estilos aislados del sitio host. No hay conflictos de CSS.</p>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h3>Sin innerHTML</h3>
+        <p>Todos los elementos HTML se crean programáticamente, sin template strings.</p>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">🔐</div>
+        <h3>Seguro</h3>
+        <p>Compatible con las políticas CSP más estrictas del mercado.</p>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">📦</div>
+        <h3>Plug & Play</h3>
+        <p>Solo incluye el script y funciona. Sin configuración adicional.</p>
+      </div>
+    </div>
+    
+    <div class="cta">
+      <p class="cta-text">¡Haz clic en el botón flotante de abajo a la derecha para probar el widget!</p>
+      <div class="arrow">👇</div>
+    </div>
+    
+    <div class="note">
+      <strong>⚠️ Nota:</strong> Si ves el widget funcionando en esta página, significa que es 100% CSP-compliant. 
+      Puedes verificar la consola del navegador: no debería haber ningún error de CSP.
+    </div>
+    
+    <footer>
+      <p><strong>TryOn Widget v1.0.0</strong></p>
+      <p>Construido con ❤️ usando solo APIs DOM seguras</p>
+      <p style="margin-top: 10px; font-size: 0.9rem;">
+        © 2025 TryOn.site - Todos los derechos reservados
+      </p>
+    </footer>
+  </div>
+  
+  <!-- 
+    Widget TryOn - CSP-Safe 
+    Este script carga el widget sin violar ninguna política CSP
+  -->
+  <script 
+    src="https://tryon-backend-delta.vercel.app/widget.js"
+    data-tryon-key="demo-key"
+    data-tryon-url="https://tryon-backend-delta.vercel.app/api"
+  ></script>
+  
+  <!-- Nota: También puedes usar el archivo local para testing -->
+  <!-- <script src="/widget.js" data-tryon-key="demo-key" data-tryon-url="https://tryon-backend-delta.vercel.app/api"></script> -->
+</body>
+</html>

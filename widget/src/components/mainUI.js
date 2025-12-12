@@ -12,12 +12,14 @@ export function createMainUI() {
   const container = document.createElement('div');
   container.className = 'tryon-main-ui';
 
-  // Header
+  // Header (CSP-safe)
   const header = document.createElement('div');
   header.className = 'tryon-main-header';
-  header.innerHTML = `
-    <div class="tryon-logo-badge">TryOn Virtual</div>
-  `;
+  
+  const logoBadge = document.createElement('div');
+  logoBadge.className = 'tryon-logo-badge';
+  logoBadge.textContent = 'TryOn Virtual';
+  header.appendChild(logoBadge);
 
   // User photo section - Large
   const userPhotoSection = document.createElement('div');
@@ -68,7 +70,12 @@ export function createMainUI() {
     if (clothes[i]) {
       const preview = document.createElement('div');
       preview.className = 'tryon-clothes-preview-main has-image';
-      preview.innerHTML = `<img src="${clothes[i]}" alt="Clothing ${i + 1}" />`;
+      
+      const img = document.createElement('img');
+      img.src = clothes[i];
+      img.alt = `Clothing ${i + 1}`;
+      preview.appendChild(img);
+      
       slot.appendChild(preview);
     }
 
@@ -85,15 +92,23 @@ export function createMainUI() {
     await handleGenerate();
   });
 
-  // Footer
+  // Footer (CSP-safe)
   const footer = document.createElement('div');
   footer.className = 'tryon-footer';
-  footer.innerHTML = `
-    <span class="tryon-footer-text">powered by TryOn.site</span>
-    <div class="tryon-footer-logo">
-      <span>TryOn</span>
-    </div>
-  `;
+  
+  const footerText = document.createElement('span');
+  footerText.className = 'tryon-footer-text';
+  footerText.textContent = 'powered by TryOn.site';
+  
+  const footerLogo = document.createElement('div');
+  footerLogo.className = 'tryon-footer-logo';
+  
+  const logoSpan = document.createElement('span');
+  logoSpan.textContent = 'TryOn';
+  footerLogo.appendChild(logoSpan);
+  
+  footer.appendChild(footerText);
+  footer.appendChild(footerLogo);
 
   // Result section
   const resultSection = document.createElement('div');
@@ -131,17 +146,25 @@ export function createMainUI() {
 
     try {
       generateBtn.disabled = true;
-      generateBtn.textContent = 'Generating...';
-      generateBtn.innerHTML = '<span class="tryon-spinner"></span> Generating...';
+      generateBtn.textContent = '';
+      
+      // Add spinner (CSP-safe)
+      const spinner = document.createElement('span');
+      spinner.className = 'tryon-spinner';
+      generateBtn.appendChild(spinner);
+      generateBtn.appendChild(document.createTextNode(' Generating...'));
 
       const result = await generateTryOn(userPhoto, clothes);
 
       // Store result
       storeGeneratedImage(result.url);
 
-      // Show result
+      // Show result (CSP-safe)
       const resultContainer = resultSection;
-      resultContainer.innerHTML = '';
+      // Clear existing children
+      while (resultContainer.firstChild) {
+        resultContainer.removeChild(resultContainer.firstChild);
+      }
       resultContainer.appendChild(createImageResult(result.url));
     } catch (error) {
       alert('Error generating image: ' + error.message);
