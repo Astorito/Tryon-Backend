@@ -12,57 +12,53 @@ export function createMainUI() {
   const container = document.createElement('div');
   container.className = 'tryon-main-ui';
 
-  // Header (CSP-safe)
+  // Header
   const header = document.createElement('div');
   header.className = 'tryon-main-header';
-  
-  const logoBadge = document.createElement('div');
-  logoBadge.className = 'tryon-logo-badge';
-  logoBadge.textContent = 'TryOn Virtual';
-  header.appendChild(logoBadge);
+  header.innerHTML = `
+    <h2>Create Your Try-On</h2>
+    <p>Upload your photo and select clothing items</p>
+  `;
 
-  // User photo section - Large
+  // User photo section
   const userPhotoSection = document.createElement('div');
-  userPhotoSection.className = 'tryon-user-photo-section';
+  userPhotoSection.className = 'tryon-section';
+  userPhotoSection.innerHTML = `<h3>Your Photo</h3>`;
 
   const userPhotoDropzone = createDropzone(
-    '',
-    'Upload your Picture',
+    'Your Photo',
+    'Drag or click to upload',
     (imageData) => {
       storeUserPhoto(imageData);
       updateUI();
     },
-    ['image/jpeg', 'image/png', 'image/webp'],
-    false,
-    true
+    ['image/jpeg', 'image/png', 'image/webp']
   );
   userPhotoSection.appendChild(userPhotoDropzone);
 
-  // Clothes section label
-  const clothesLabel = document.createElement('div');
-  clothesLabel.className = 'tryon-products-label';
-  clothesLabel.textContent = 'Drag the products';
+  // Clothes grid
+  const clothesSection = document.createElement('div');
+  clothesSection.className = 'tryon-section';
+  clothesSection.innerHTML = `<h3>Clothing Items (Select up to 4)</h3>`;
 
-  // Clothes grid - 3 items
   const clothesGrid = document.createElement('div');
   clothesGrid.className = 'tryon-clothes-grid-main';
 
   const clothes = getClothes();
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     const slot = document.createElement('div');
     slot.className = 'tryon-clothes-slot-main';
 
     const dropzone = createDropzone(
-      '',
-      '',
+      `Item ${i + 1}`,
+      'Add clothing',
       (imageData) => {
         storeClothes(i, imageData);
         updateUI();
       },
       ['image/jpeg', 'image/png', 'image/webp'],
-      true,
-      false
+      true
     );
 
     slot.appendChild(dropzone);
@@ -70,45 +66,29 @@ export function createMainUI() {
     if (clothes[i]) {
       const preview = document.createElement('div');
       preview.className = 'tryon-clothes-preview-main has-image';
-      
-      const img = document.createElement('img');
-      img.src = clothes[i];
-      img.alt = `Clothing ${i + 1}`;
-      preview.appendChild(img);
-      
+      preview.innerHTML = `<img src="${clothes[i]}" alt="Clothing ${i + 1}" />`;
       slot.appendChild(preview);
     }
 
     clothesGrid.appendChild(slot);
   }
 
+  clothesSection.appendChild(clothesGrid);
+
   // Generate button
+  const generateSection = document.createElement('div');
+  generateSection.className = 'tryon-section tryon-section-generate';
+
   const generateBtn = document.createElement('button');
-  generateBtn.className = 'tryon-btn-create';
-  generateBtn.textContent = 'Create';
+  generateBtn.className = 'tryon-btn-primary tryon-btn-generate';
+  generateBtn.textContent = 'Generate Try-On';
   generateBtn.id = 'tryon-generate-btn';
 
   generateBtn.addEventListener('click', async () => {
     await handleGenerate();
   });
 
-  // Footer (CSP-safe)
-  const footer = document.createElement('div');
-  footer.className = 'tryon-footer';
-  
-  const footerText = document.createElement('span');
-  footerText.className = 'tryon-footer-text';
-  footerText.textContent = 'powered by TryOn.site';
-  
-  const footerLogo = document.createElement('div');
-  footerLogo.className = 'tryon-footer-logo';
-  
-  const logoSpan = document.createElement('span');
-  logoSpan.textContent = 'TryOn';
-  footerLogo.appendChild(logoSpan);
-  
-  footer.appendChild(footerText);
-  footer.appendChild(footerLogo);
+  generateSection.appendChild(generateBtn);
 
   // Result section
   const resultSection = document.createElement('div');
@@ -118,10 +98,8 @@ export function createMainUI() {
   // Assemble
   container.appendChild(header);
   container.appendChild(userPhotoSection);
-  container.appendChild(clothesLabel);
-  container.appendChild(clothesGrid);
-  container.appendChild(generateBtn);
-  container.appendChild(footer);
+  container.appendChild(clothesSection);
+  container.appendChild(generateSection);
   container.appendChild(resultSection);
 
   // Update UI function
@@ -146,25 +124,17 @@ export function createMainUI() {
 
     try {
       generateBtn.disabled = true;
-      generateBtn.textContent = '';
-      
-      // Add spinner (CSP-safe)
-      const spinner = document.createElement('span');
-      spinner.className = 'tryon-spinner';
-      generateBtn.appendChild(spinner);
-      generateBtn.appendChild(document.createTextNode(' Generating...'));
+      generateBtn.textContent = 'Generating...';
+      generateBtn.innerHTML = '<span class="tryon-spinner"></span> Generating...';
 
       const result = await generateTryOn(userPhoto, clothes);
 
       // Store result
       storeGeneratedImage(result.url);
 
-      // Show result (CSP-safe)
+      // Show result
       const resultContainer = resultSection;
-      // Clear existing children
-      while (resultContainer.firstChild) {
-        resultContainer.removeChild(resultContainer.firstChild);
-      }
+      resultContainer.innerHTML = '';
       resultContainer.appendChild(createImageResult(result.url));
     } catch (error) {
       alert('Error generating image: ' + error.message);

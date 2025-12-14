@@ -1,11 +1,11 @@
 /**
  * Main Widget Module
- * Handles widget initialization with Shadow DOM for complete isolation
+ * Handles widget initialization, DOM creation, and lifecycle
  */
 
 import { createButton } from './components/button.js';
 import { createModal } from './components/modal.js';
-import { getStyles } from './styles/index.js';
+import { injectStyles } from './styles/index.js';
 
 let widgetInstance = null;
 
@@ -13,55 +13,37 @@ export function createWidget() {
   // Prevent multiple instances
   if (widgetInstance) return widgetInstance;
 
-  // Find or create host container
-  let hostContainer = document.getElementById('tryon-widget-container');
-  
-  if (!hostContainer) {
-    // Fallback: create container if not exists
-    hostContainer = document.createElement('div');
-    hostContainer.id = 'tryon-widget-container';
-    hostContainer.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 999999;';
-    document.body.appendChild(hostContainer);
-  }
+  // Inject scoped styles
+  injectStyles();
 
-  // Create Shadow DOM for complete style isolation
-  const shadowRoot = hostContainer.attachShadow({ mode: 'open' });
+  // Create widget container
+  const container = document.createElement('div');
+  container.id = 'tryon-widget-container';
+  container.className = 'tryon-widget-root';
+  document.body.appendChild(container);
 
-  // Create shadow container
-  const shadowContainer = document.createElement('div');
-  shadowContainer.className = 'tryon-widget-root';
-
-  // Inject styles INSIDE shadow DOM
-  const styleElement = document.createElement('style');
-  styleElement.textContent = getStyles();
-  shadowRoot.appendChild(styleElement);
-  shadowRoot.appendChild(shadowContainer);
-
-  // Create floating button inside shadow
+  // Create and inject floating button
   const button = createButton(() => {
     modal.open();
   });
-  shadowContainer.appendChild(button);
+  container.appendChild(button);
 
-  // Create modal inside shadow
+  // Create modal
   const modal = createModal(() => {
     // On close callback
   });
-  shadowContainer.appendChild(modal);
+  container.appendChild(modal);
 
   widgetInstance = {
-    hostContainer,
-    shadowRoot,
-    shadowContainer,
+    container,
     button,
     modal,
     destroy: () => {
-      hostContainer.remove();
+      container.remove();
       widgetInstance = null;
     },
   };
 
-  console.log('[TryOn Widget] Initialized with Shadow DOM');
   return widgetInstance;
 }
 

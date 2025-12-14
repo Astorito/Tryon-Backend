@@ -19,14 +19,10 @@ export function createImageResult(imageUrl) {
   const lens = document.createElement('div');
   lens.className = 'tryon-magnifier-lens';
 
-  // Magnifier view (CSP-safe)
+  // Magnifier view
   const magnifierView = document.createElement('div');
   magnifierView.className = 'tryon-magnifier-view';
-  
-  const magnifierImg = document.createElement('img');
-  magnifierImg.src = imageUrl;
-  magnifierImg.alt = 'Magnified view';
-  magnifierView.appendChild(magnifierImg);
+  magnifierView.innerHTML = `<img src="${imageUrl}" alt="Magnified view" />`;
 
   imageWrapper.appendChild(img);
   imageWrapper.appendChild(lens);

@@ -1,76 +1,38 @@
 /**
- * Styles Module
- * Returns all widget styles for Shadow DOM isolation
+ * Styles Injector
+ * Injects all widget styles into the page
  */
 
-// Deprecated: for backward compatibility
 export function injectStyles() {
-  console.warn('[TryOn Widget] injectStyles is deprecated, using Shadow DOM now');
+  // Check if styles already injected
+  if (document.querySelector('#tryon-widget-styles')) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = 'tryon-widget-styles';
+  style.textContent = getStyles();
+
+  document.head.appendChild(style);
 }
 
-export function getStyles() {
+function getStyles() {
   return `
 /* ============================================================================
-   Shadow DOM Reset - Prevent host styles from bleeding in
-   ============================================================================ */
-
-:host {
-  all: initial;
-  display: block;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 999999;
-  pointer-events: none;
-}
-
-/* Reset all elements to prevent inheritance from host */
-* {
-  all: unset;
-  display: revert;
-  box-sizing: border-box;
-}
-
-/* Restore default element behavior */
-div, span, button, input, img, svg, form, label {
-  display: block;
-}
-
-button, input[type="file"] {
-  cursor: pointer;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* ============================================================================
-   Tryon Widget - Variables & Base Styles
+   Tryon Widget - Global Styles
    ============================================================================ */
 
 .tryon-widget-root {
-  all: initial;
-  display: block;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #1F2937;
-  pointer-events: auto;
-  min-height: 60px;
-  
-  --tryon-primary: #C4A57B;
-  --tryon-primary-dark: #B39564;
+  --tryon-primary: #5CAEFF;
+  --tryon-primary-dark: #4A90E2;
   --tryon-secondary: #6B7280;
-  --tryon-background: #F5F5F5;
-  --tryon-card-bg: #FFFFFF;
-  --tryon-border: #E5E7EB;
+  --tryon-background: rgba(255, 255, 255, 0.95);
+  --tryon-background-dark: rgba(30, 30, 30, 0.5);
+  --tryon-border: rgba(0, 0, 0, 0.1);
   --tryon-text: #1F2937;
   --tryon-text-light: #6B7280;
-  --tryon-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --tryon-radius: 20px;
-  --tryon-radius-sm: 12px;
+  --tryon-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  --tryon-radius: 16px;
   --tryon-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -139,50 +101,45 @@ img {
 }
 
 /* ============================================================================
-   Modal - Popover Style (NO backdrop, NO full screen)
+   Modal
    ============================================================================ */
 
 .tryon-modal {
-  position: absolute;
-  bottom: 80px;
-  right: 0;
+  position: fixed;
+  inset: 0;
   display: none;
-  z-index: 9999;
+  z-index: 10000;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   color: var(--tryon-text);
-  pointer-events: auto;
 }
 
 .tryon-modal.tryon-modal-open {
-  display: block;
+  display: flex;
 }
 
-/* NO backdrop for popover mode */
 .tryon-modal-backdrop {
-  display: none !important;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  animation: tryon-fade-in 0.3s ease-out forwards;
 }
 
 .tryon-modal-wrapper {
   position: relative;
-  width: 380px;
-  max-width: calc(100vw - 48px);
+  margin: auto;
+  width: 90%;
+  max-width: 500px;
   height: auto;
-  max-height: calc(100vh - 140px);
+  max-height: 85vh;
   background: var(--tryon-background);
   border-radius: var(--tryon-radius);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tryon-shadow);
   display: flex;
   flex-direction: column;
-  overflow: visible;
-  animation: tryon-slide-up-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  padding: 24px;
-  border: 1px solid var(--tryon-border);
-}
-
-/* Popover specific wrapper */
-.tryon-modal-popover-wrapper {
-  width: 380px;
-  max-height: calc(100vh - 140px);
+  overflow: hidden;
+  animation: tryon-slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .tryon-modal-close {
@@ -211,9 +168,7 @@ img {
 .tryon-modal-content {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0;
-  border-radius: var(--tryon-radius-sm);
+  padding: 32px 24px;
 }
 
 /* ============================================================================
@@ -599,30 +554,14 @@ img {
   }
 }
 
-@keyframes tryon-slide-up-right {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 /* ============================================================================
    Responsive
    ============================================================================ */
 
 @media (max-width: 640px) {
-  .tryon-modal {
-    right: 12px;
-    bottom: 80px;
-  }
-
   .tryon-modal-wrapper {
-    width: calc(100vw - 24px);
-    max-height: calc(100vh - 120px);
+    width: 95%;
+    max-height: 90vh;
     border-radius: 20px;
   }
 
@@ -654,15 +593,11 @@ img {
 }
 
 @media (max-width: 400px) {
-  .tryon-modal {
-    right: 8px;
-    bottom: 70px;
-  }
-
   .tryon-modal-wrapper {
-    width: calc(100vw - 16px);
-    max-height: calc(100vh - 100px);
-    border-radius: 16px;
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 20px 20px 0 0;
+    max-height: calc(100dvh - 10px);
   }
 
   .tryon-modal-content {
@@ -692,147 +627,6 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* ============================================================================
-   New Design - Specific Styles
-   ============================================================================ */
-
-.tryon-logo-badge {
-  background: white;
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--tryon-text);
-  display: inline-block;
-  margin: 0 auto 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-}
-
-.tryon-main-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.tryon-user-photo-section {
-  margin-bottom: 16px;
-}
-
-.tryon-dropzone.large {
-  margin-bottom: 0;
-}
-
-.tryon-dropzone.large .tryon-dropzone-area {
-  background: white;
-  border: none;
-  border-radius: var(--tryon-radius);
-  padding: 60px 24px;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--tryon-shadow);
-}
-
-.tryon-dropzone-icon-large {
-  color: var(--tryon-text-light);
-  margin-bottom: 12px;
-}
-
-.tryon-dropzone-placeholder-large {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--tryon-text);
-}
-
-.tryon-products-label {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--tryon-text);
-  margin: 16px 0 12px;
-}
-
-.tryon-clothes-grid-main {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.tryon-clothes-slot-main {
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: var(--tryon-radius-sm);
-  background: white;
-  box-shadow: var(--tryon-shadow);
-}
-
-.tryon-dropzone.compact .tryon-dropzone-area {
-  background: white;
-  border: none;
-  padding: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tryon-dropzone-icon-compact {
-  color: var(--tryon-text-light);
-}
-
-.tryon-btn-create {
-  width: 100%;
-  padding: 14px 24px;
-  border: none;
-  border-radius: var(--tryon-radius-sm);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--tryon-transition);
-  background: var(--tryon-primary);
-  color: white;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(196, 165, 123, 0.3);
-}
-
-.tryon-btn-create:hover:not(:disabled) {
-  background: var(--tryon-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(196, 165, 123, 0.4);
-}
-
-.tryon-btn-create:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.tryon-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 0 0;
-  border-top: 1px solid var(--tryon-border);
-  margin-top: auto;
-}
-
-.tryon-footer-text {
-  font-size: 12px;
-  color: var(--tryon-text-light);
-}
-
-.tryon-footer-logo {
-  background: var(--tryon-text);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
 }
   `;
 }

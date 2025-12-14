@@ -1,6 +1,5 @@
 /**
  * Step 4: Result
- * CSP-safe: No innerHTML, uses DOM methods
  */
 
 import { getGeneratedImage } from '../../utils/storage.js';
@@ -12,58 +11,37 @@ export function createResultStep() {
   const generatedImage = getGeneratedImage();
 
   if (generatedImage) {
-    // Image container
-    const imageContainer = document.createElement('div');
-    imageContainer.className = 'tryon-result-image-container';
-    
-    const img = document.createElement('img');
-    img.src = generatedImage;
-    img.alt = 'Generated try-on';
-    img.className = 'tryon-result-image';
-    
-    const overlay = document.createElement('div');
-    overlay.className = 'tryon-result-overlay';
-    overlay.textContent = 'Your Try-On Result!';
-    
-    imageContainer.appendChild(img);
-    imageContainer.appendChild(overlay);
+    container.innerHTML = `
+      <div class="tryon-result-image-container">
+        <img src="${generatedImage}" alt="Generated try-on" class="tryon-result-image" />
+        <div class="tryon-result-overlay">Your Try-On Result!</div>
+      </div>
+      <div class="tryon-result-actions">
+        <button class="tryon-btn-primary tryon-btn-download">Download Image</button>
+        <button class="tryon-btn-secondary tryon-btn-try-again">Try Another</button>
+      </div>
+    `;
 
-    // Actions container
-    const actionsContainer = document.createElement('div');
-    actionsContainer.className = 'tryon-result-actions';
-    
-    const downloadBtn = document.createElement('button');
-    downloadBtn.className = 'tryon-btn-primary tryon-btn-download';
-    downloadBtn.textContent = 'Download Image';
-    downloadBtn.addEventListener('click', () => {
+    const downloadBtn = container.querySelector('.tryon-btn-download');
+    const tryAgainBtn = container.querySelector('.tryon-btn-try-again');
+
+    downloadBtn?.addEventListener('click', () => {
       const link = document.createElement('a');
       link.href = generatedImage;
       link.download = 'tryon-result.png';
       link.click();
     });
-    
-    const tryAgainBtn = document.createElement('button');
-    tryAgainBtn.className = 'tryon-btn-secondary tryon-btn-try-again';
-    tryAgainBtn.textContent = 'Try Another';
-    tryAgainBtn.addEventListener('click', () => {
+
+    tryAgainBtn?.addEventListener('click', () => {
+      // Reset to main UI
       location.reload(); // Simple approach
     });
-    
-    actionsContainer.appendChild(downloadBtn);
-    actionsContainer.appendChild(tryAgainBtn);
-
-    container.appendChild(imageContainer);
-    container.appendChild(actionsContainer);
   } else {
-    // Placeholder
-    const placeholder = document.createElement('div');
-    placeholder.className = 'tryon-result-placeholder';
-    
-    const message = document.createElement('p');
-    message.textContent = 'No result yet. Generate an image first!';
-    
-    placeholder.appendChild(message);
-    container.appendChild(placeholder);
+    container.innerHTML = `
+      <div class="tryon-result-placeholder">
+        <p>No result yet. Generate an image first!</p>
+      </div>
+    `;
   }
 
   return container;

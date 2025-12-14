@@ -10,26 +10,30 @@ import { hasSeenOnboarding, setOnboardingSeen } from '../utils/storage.js';
 export function createModal(onCloseCallback) {
   const modal = document.createElement('div');
   modal.id = 'tryon-modal';
-  modal.className = 'tryon-modal tryon-modal-popover';
+  modal.className = 'tryon-modal';
 
-  // NO backdrop - popover style
+  // Modal backdrop
+  const backdrop = document.createElement('div');
+  backdrop.className = 'tryon-modal-backdrop';
+
   // Modal content wrapper
   const contentWrapper = document.createElement('div');
-  contentWrapper.className = 'tryon-modal-wrapper tryon-modal-popover-wrapper';
+  contentWrapper.className = 'tryon-modal-wrapper';
 
-  // Close button (CSP-safe)
+  // Close button
   const closeBtn = document.createElement('button');
   closeBtn.className = 'tryon-modal-close';
-  closeBtn.textContent = '×'; // Unicode character instead of HTML entity
+  closeBtn.innerHTML = '&times;';
   closeBtn.setAttribute('aria-label', 'Close modal');
 
   // Main content area (will be populated dynamically)
   const content = document.createElement('div');
   content.className = 'tryon-modal-content';
 
-  // Assemble modal (popover style - no backdrop)
+  // Assemble modal
   contentWrapper.appendChild(closeBtn);
   contentWrapper.appendChild(content);
+  modal.appendChild(backdrop);
   modal.appendChild(contentWrapper);
 
   // Modal state
@@ -38,10 +42,7 @@ export function createModal(onCloseCallback) {
 
   // Load appropriate view
   function loadView() {
-    // Clear content (CSP-safe)
-    while (content.firstChild) {
-      content.removeChild(content.firstChild);
-    }
+    content.innerHTML = '';
 
     if (currentView === 'onboarding') {
       const onboarding = createOnboarding(() => {
@@ -76,15 +77,13 @@ export function createModal(onCloseCallback) {
   function close() {
     isOpen = false;
     modal.classList.remove('tryon-modal-open');
-    // Clear content (CSP-safe)
-    while (content.firstChild) {
-      content.removeChild(content.firstChild);
-    }
+    content.innerHTML = '';
     onCloseCallback?.();
   }
 
   // Event listeners
   closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
 
   // Expose methods
   modal.open = open;
