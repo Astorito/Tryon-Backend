@@ -43,4 +43,10 @@
       ]
     }
   ]
+
+  ,"rewrites": [
+    { "source": "/widget-v1.js", "destination": "/api/widget" },
+    { "source": "/widget.js", "destination": "/api/widget" },
+    { "source": "/widget-:version.js", "destination": "/api/widget" }
+  ]
 }
