@@ -22,24 +22,40 @@ import metricsRoutes from './routes/metrics';
 import healthRoutes from './routes/health';
 import imagesRoutes from './routes/images';
 import empresasRoutes from './routes/empresas';
+import widgetRoutes from './routes/widget';
 
 const app: Express = express();
 
-// Handle preflight requests FIRST (before any other middleware)
-app.options('*', (req: Request, res: Response) => {
+// CORS for widget API endpoints: explicit headers required by widget
+// - Allow any origin
+// - Allow only GET, POST, OPTIONS
+// - Allow only Content-Type and x-client-key headers
+app.use('/api', (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-client-key, x-admin-key, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.status(200).end();
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-client-key');
+  // Respond to preflight with JSON (widget expects JSON responses)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).json({ success: true });
+  }
+  next();
+});
+
+// Ensure /health endpoint is CORS-friendly for external checks
+app.use('/health', (req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-client-key');
+  if (req.method === 'OPTIONS') return res.status(200).json({ success: true });
+  next();
 });
 
 // Middleware
+// Global CORS fallback for non-widget endpoints (conservative)
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'x-client-key', 'x-admin-key', 'Authorization'],
-  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'x-client-key'],
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -76,15 +92,18 @@ try {
 }
 app.use(express.static(publicPath));
 
-// Health check (no authentication required)
-app.use('/health', healthRoutes);
+// Health check (no authentication required) - exposed under /api/health
+app.use('/api/health', healthRoutes);
+
+// Serve widget JS at /api/widget (CORS-friendly)
+app.use('/api/widget', widgetRoutes);
 
 // Public authentication routes
 app.use('/auth', authRoutes);
 
-// Protected routes - client authentication required
-app.use('/images', imagesRoutes);
-app.use('/generate', generationRoutes);
+// Protected routes - client authentication required (API endpoints under /api)
+app.use('/api/images', imagesRoutes);
+app.use('/api/generate', generationRoutes);
 
 // Admin routes
 app.use('/metrics', metricsRoutes);

@@ -671,4 +671,22 @@
     transition-duration: 0.01ms !important;
   }
 }
-  `}var x=null;function R(){if(x)return x;U();let t=document.createElement("div");t.id="tryon-widget-container",t.className="tryon-widget-root",document.body.appendChild(t);let e=k(()=>{n.open()});t.appendChild(e);let n=A(()=>{});return t.appendChild(n),x={container:t,button:e,modal:n,destroy:()=>{t.remove(),x=null}},x}function Y(){let t=document.querySelectorAll("script"),e=null;for(let o of t)if(o.src&&o.src.includes("widget.js")){e=o;break}if(!e)return console.error("[Tryon Widget] Could not find widget script tag"),null;let n=e.getAttribute("data-tryon-key"),r=e.getAttribute("data-tryon-url")||"https://tryon-backend.vercel.app";return n?(window.TRYON_WIDGET_CONFIG={apiKey:n,apiUrl:r,scriptElement:e},{apiKey:n,apiUrl:r}):(console.error("[Tryon Widget] Missing required attribute: data-tryon-key"),null)}function D(){if(!Y()){console.warn("[Tryon Widget] Widget initialization cancelled due to missing configuration");return}R()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",D):D();})();
+  `}var x=null;function R(){if(x)return x;U();let t=document.createElement("div");t.id="tryon-widget-container",t.className="tryon-widget-root",document.body.appendChild(t);let e=k(()=>{n.open()});t.appendChild(e);let n=A(()=>{});return t.appendChild(n),x={container:t,button:e,modal:n,destroy:()=>{t.remove(),x=null}},x}function Y(){
+    let scripts = document.querySelectorAll("script"), found = null;
+    for (let s of scripts) {
+      try {
+        if (s.getAttribute && s.getAttribute('data-tryon-key')) { found = s; break }
+        if (s.src && (s.src.includes("widget.js") || s.src.includes("widget-v1.js") || s.src.includes("/api/widget"))) { found = s; break }
+      } catch (e) {}
+    }
+    if (!found) {
+      console.error("[Tryon Widget] Could not find widget script tag (add data-tryon-key attribute)");
+      return null;
+    }
+    const key = found.getAttribute('data-tryon-key');
+    const url = found.getAttribute('data-tryon-url') || "https://tryon-backend.vercel.app";
+    if (!key) { console.error("[Tryon Widget] Missing required attribute: data-tryon-key"); return null }
+    window.TRYON_WIDGET_CONFIG = { apiKey: key, apiUrl: url, scriptElement: found };
+    return { apiKey: key, apiUrl: url };
+  }
+  function D(){if(!Y()){console.warn("[Tryon Widget] Widget initialization cancelled due to missing configuration");return}R()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",D):D();})();
